@@ -5,6 +5,5 @@
 |Anis Saha  |sahaani2|1005101284  |anis.saha@mail.utoronto.ca       |6475545543                    |DoctorTinku#6184                  |
 |Muhammad Saad Raza|razamu15|1004257127|saad.raza@mail.utoronto.ca|6478629787|Muhammad Saad Raza#4075|
 |Mohammed Abdullah Ibne Khan|khanm253|1004787279|mohammedibne.khan@mail.utoronto.ca|4165706491    | Abdullah#1598                 |
-|           |        |            |       |                     |                  |
 ---
 **Discord Chat/Server Invite :** https://discord.gg/hnDBh2ZC
