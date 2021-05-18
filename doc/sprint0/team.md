@@ -7,4 +7,4 @@
 |Mohammed Abdullah Ibne Khan|khanm253|1004787279|mohammedibne.khan@mail.utoronto.ca|4165706491    | Abdullah#1598                 |
 |           |        |            |       |                     |                  |
 ---
-**Discord Chat/Server Invite :** [insert link here]
+**Discord Chat/Server Invite :** https://discord.gg/hnDBh2ZC
