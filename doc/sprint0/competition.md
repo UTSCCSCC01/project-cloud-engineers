@@ -2,8 +2,8 @@
 
 ## Existing Products
 - [Google Classroom]  [https://edu.google.com/intl/en_ca/products/classroom/]
-- [Quercus] [q.utoronto.ca]
-- [Zoom] [zoom.us]
+- [Quercus] [https://q.utoronto.ca]
+- [Zoom] [https://zoom.us]
 
 
 ## Why our product is different
