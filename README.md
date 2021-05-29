@@ -18,4 +18,4 @@ We use the git-flow workflow for merging and managing code in the repository. Th
 4. develop
 5. feature
 
-The features branches follow the following naming convention of _feature_{name_of_feature_separated_by_underscores}_ . We use Jira for tracking issues and to merge a feature branch into the develop branch requires a pull request that needs to be approved by atleast 2 group members.
+The features branches follow the following naming convention of _feature\_{name_of_feature_separated_by_underscores}_. We use Jira for tracking issues and to merge a feature branch into the develop branch requires a pull request that needs to be approved by atleast 2 group members.
