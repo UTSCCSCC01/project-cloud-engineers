@@ -32,8 +32,15 @@ function useAuthProvider() {
       });
   };
 
+  const signIn = (details, cb) => {
+    return setTimeout(() => {
+      cb();
+    }, 500);
+  }
+
   return {
     user,
+    signIn,
     signUp
   };
 }

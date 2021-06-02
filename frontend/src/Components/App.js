@@ -1,6 +1,8 @@
 import { Switch, Route, Link } from 'react-router-dom'
 
 import Register from './Register';
+import Login from './Login';
+
 import logo from '../logo.svg';
 import '../Styles/App.css';
 
@@ -20,6 +22,9 @@ function App() {
         </Route>
         <Route exact path='/register'>
           <Register />
+        </Route>
+        <Route exact path='/login'>
+          <Login />
         </Route>
       </Switch>
     </div>
