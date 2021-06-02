@@ -22,18 +22,9 @@ function useAuthProvider() {
   const firebase = useFirebase();
 
   const signUp = (details, cb) => {
-    console.log(details);
-    // first check if this user already exists
-    firebase.firestore().collection("users").where("email", "==", details.email).get()
-      .then((querySnapShot) => {
-        console.log(querySnapShot);
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    // setTimeout(() => {
-    //   cb();
-    // }, 1000)
+    setTimeout(() => {
+      cb();
+    }, 1000)
   };
 
   return {
