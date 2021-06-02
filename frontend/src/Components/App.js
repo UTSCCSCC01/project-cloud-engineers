@@ -1,7 +1,9 @@
 import { Switch, Route, Link } from 'react-router-dom'
 
+import Register from './Register';
 import logo from '../logo.svg';
 import '../Styles/App.css';
+
 
 function App() {
   return (
@@ -16,7 +18,9 @@ function App() {
 
           </header>
         </Route>
-        
+        <Route exact path='/register'>
+          <Register />
+        </Route>
       </Switch>
     </div>
   );
