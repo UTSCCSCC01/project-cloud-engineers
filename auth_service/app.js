@@ -28,8 +28,8 @@ SALT_ROUNDS = 5;
 app.use((req, res, next) => {
     console.log("HTTP request", req.method, req.url, req.body);
 
-    // res.header('Access-Control-Allow-Headers', '*');
-    // res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', '*');
+    res.header('Access-Control-Allow-Origin', '*');
     next();
 });
 
@@ -60,7 +60,7 @@ app.post('/register', async (req, res) => {
                 createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
             }).then((docRef) => {
                 console.log("added")
-                res.json({status: 'success'})
+                res.json({status: 'success'});
             })
             .catch((error) => {
                 res.status(400);
@@ -68,7 +68,8 @@ app.post('/register', async (req, res) => {
             });
         }
     } catch (err) {
-
+        res.status(400);
+        res.end();
     }
 });
 

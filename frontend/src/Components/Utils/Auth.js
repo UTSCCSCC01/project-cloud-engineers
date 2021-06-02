@@ -1,6 +1,7 @@
 import React, { useState, useContext, createContext } from "react";
 import { Route, Redirect } from 'react-router-dom';
-import { useFirebase } from './Firebase'
+import { useFirebase } from './Firebase';
+import axios from 'axios';
 
 const authContext = createContext();
 
@@ -22,9 +23,13 @@ function useAuthProvider() {
   const firebase = useFirebase();
 
   const signUp = (details, cb) => {
-    setTimeout(() => {
-      cb();
-    }, 1000)
+    return axios.post('http://localhost:8080/register', details)
+      .then((response) => {
+        cb();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return {
