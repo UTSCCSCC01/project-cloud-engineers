@@ -1,5 +1,6 @@
 import React, { useState, useContext, createContext } from "react";
 import { Route, Redirect } from 'react-router-dom';
+import { useFirebase } from './Firebase'
 
 const authContext = createContext();
 
@@ -18,11 +19,21 @@ function useAuth() {
 
 function useAuthProvider() {
   const [user, setUser] = useState(null);
+  const firebase = useFirebase();
 
   const signUp = (details, cb) => {
-    setTimeout(() => {
-      cb();
-    }, 1000)
+    console.log(details);
+    // first check if this user already exists
+    firebase.firestore().collection("users").where("email", "==", details.email).get()
+      .then((querySnapShot) => {
+        console.log(querySnapShot);
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    // setTimeout(() => {
+    //   cb();
+    // }, 1000)
   };
 
   return {
