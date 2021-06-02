@@ -1,17 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import './Styles/index.css';
+import App from './Components/App';
+
+import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from './Components/Utils/Auth';
+import { FirebaseProvider } from './Components/Utils/Firebase';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <FirebaseProvider>
+      <AuthProvider>
+        <Router>
+          <App />
+        </Router>
+      </AuthProvider>
+    </FirebaseProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
