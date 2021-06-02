@@ -17,6 +17,7 @@ function App() {
             <p> Edit <code>src/App.js</code> and save to reload.</p>
             
             <Link className="App-link" to={`/register`}>Register</Link>
+            <Link className="App-link" to={`/login`}>Login</Link>
 
           </header>
         </Route>

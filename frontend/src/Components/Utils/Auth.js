@@ -33,9 +33,19 @@ function useAuthProvider() {
   };
 
   const signIn = (details, cb) => {
-    return setTimeout(() => {
-      cb();
-    }, 500);
+    return axios.post('http://localhost:8080/login', details)
+      .then((response) => {
+        // set the user info into state
+        let user = { userID: response.data.userID, username: response.data.username };
+        setUser(user);
+        // store the JWT and user in localStorage
+        localStorage.setItem("authToken", response.data.authToken);
+        localStorage.setItem("user", JSON.stringify(user));
+        cb();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   return {
