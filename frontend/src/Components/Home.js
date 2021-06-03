@@ -1,7 +1,14 @@
+import { useHistory } from "react-router-dom";
+
 import logo from '../logo.svg';
 import '../Styles/App.css';
 
+import { useAuth } from './Utils/Auth'
+
 function Home() {
+  let auth = useAuth();
+  let history = useHistory();
+  
   return (
     <div className="App">
           <header className="App-header">
