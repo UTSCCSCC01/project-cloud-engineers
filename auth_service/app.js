@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 SALT_ROUNDS = 5;
+TOKEN_SECRET = "hahaMYSeCR3TiSA-A7iN6";
 
 app.use((req, res, next) => {
     console.log("HTTP request", req.method, req.url, req.body);
@@ -47,8 +48,7 @@ app.post('/register', async (req, res) => {
         // check if the result is non-empty email already taken
         if (querySnapShot.docs.length !== 0) {
             console.log("NOT added")
-            res.status(400);
-            res.end();
+            res.status(400).end();
             //json({: user_insert.insertedCount});
         } else {
             let uid = nanoid();
@@ -74,6 +74,27 @@ app.post('/register', async (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
+    let { email, password } = req.body;
+    try {
+        let userResult = await db.collection('users').where('email', '==', email).get();
+        // check user exists
+        if (userResult.docs.length !== 1) {
+            res.status(404).end("email does not exist");
+        } else {
+            userResult.forEach((doc) => {
+                userDoc = doc.data();
+            })
+            if (bcrypt.compareSync(password, userDoc.password)) {
+                let token = jwt.sign({userID: userDoc.uid}, TOKEN_SECRET, { expiresIn: '1h' });
+                return res.json({userID: userDoc.uid, username: userDoc.username, authToken: token});
+            } else {
+                return res.status(401).end("incorrect password");
+            }
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500); // db operation failed 
+    }
 });
 
 app.post('/logout', async (req, res) => {
