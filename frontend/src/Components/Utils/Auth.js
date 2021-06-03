@@ -46,6 +46,20 @@ function useAuthProvider() {
       });
   }
 
+  return axios.post('/logout', {}, {
+    headers: {
+      'Authorization': `token ${localStorage.getItem("authToken")}`
+    }
+  }).then((response) => {
+    // set the local storage of auth and user to null
+    localStorage.setItem("authToken", "");
+    localStorage.setItem("user", "");
+    setUser(null);
+    cb();
+  }).catch((error) => {
+    console.error(error);
+  });
+
   return {
     user,
     signIn,
