@@ -1,6 +1,5 @@
 import React, { useState, useContext, createContext } from "react";
 import { Route, Redirect } from 'react-router-dom';
-import { useFirebase } from './Firebase';
 import axios from 'axios';
 
 const authContext = createContext();
@@ -20,7 +19,6 @@ function useAuth() {
 
 function useAuthProvider() {
   const [user, setUser] = useState(null);
-  const firebase = useFirebase();
 
   const signUp = (details, cb) => {
     return axios.post('http://localhost:8080/register', details)
