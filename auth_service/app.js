@@ -98,6 +98,9 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/logout', async (req, res) => {
+    // const authHeader = req.headers['authorization'];
+    // expiredTokens.push(authHeader.split(' ')[1]);
+    return res.status(200).json({});
 });
 
 app.post('/verify', async (req, res) => {
