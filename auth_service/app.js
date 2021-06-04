@@ -55,8 +55,7 @@ app.post('/register', async (req, res) => {
             db.collection('users').doc(uid).set({
                 uid,
                 username,
-                email,
-                role: 'inaccessible',
+                email, 
                 password: bcrypt.hashSync(password, SALT_ROUNDS),
                 createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
             }).then((docRef) => {
