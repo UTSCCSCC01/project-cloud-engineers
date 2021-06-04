@@ -43,7 +43,7 @@ app.use((req, res, next) => {
 
 app.post('/register', async (req, res) => {
     try {
-        let { username, email, password, role } = req.body;
+        let { username, email, password } = req.body;
         querySnapShot = await db.collection('users').where('email', '==', email).get();
         // check if the result is non-empty email already taken
         if (querySnapShot.docs.length !== 0) {
@@ -56,7 +56,7 @@ app.post('/register', async (req, res) => {
                 uid,
                 username,
                 email,
-                role,
+                role: 'inaccessible',
                 password: bcrypt.hashSync(password, SALT_ROUNDS),
                 createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
             }).then((docRef) => {
