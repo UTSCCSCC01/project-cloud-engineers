@@ -8,7 +8,7 @@ function Register(props) {
   let auth = useAuth();
   let history = useHistory();
 
-  const [info, setInfo] = useState({ username: "", email: "", password: "" });
+  const [info, setInfo] = useState({ username: "", email: "", password: "", role: "normal" });
 
   const signUp = e => {
     e.preventDefault();
