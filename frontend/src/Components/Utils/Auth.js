@@ -34,7 +34,7 @@ function useAuthProvider() {
     return axios.post('http://localhost:8080/login', details)
       .then((response) => {
         // set the user info into state
-        let user = { userID: response.data.userID, username: response.data.username };
+        let user = { userID: response.data.userID, username: response.data.username, role: response.data.role };
         setUser(user);
         // store the JWT and user in localStorage
         localStorage.setItem("authToken", response.data.authToken);

@@ -55,7 +55,8 @@ app.post('/register', async (req, res) => {
             db.collection('users').doc(uid).set({
                 uid,
                 username,
-                email, 
+                email,
+                role: 'inaccessible',
                 password: bcrypt.hashSync(password, SALT_ROUNDS),
                 createdAt: firebase.firestore.Timestamp.fromDate(new Date()),
             }).then((docRef) => {
@@ -86,7 +87,7 @@ app.post('/login', async (req, res) => {
             })
             if (bcrypt.compareSync(password, userDoc.password)) {
                 let token = jwt.sign({userID: userDoc.uid}, TOKEN_SECRET, { expiresIn: '1h' });
-                return res.json({userID: userDoc.uid, username: userDoc.username, authToken: token});
+                return res.json({userID: userDoc.uid, username: userDoc.username, role: userDoc.role, authToken: token});
             } else {
                 return res.status(401).end("incorrect password");
             }
