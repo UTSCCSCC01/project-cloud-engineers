@@ -87,7 +87,7 @@ app.post('/login', async (req, res) => {
             })
             if (bcrypt.compareSync(password, userDoc.password)) {
                 let token = jwt.sign({userID: userDoc.uid}, TOKEN_SECRET, { expiresIn: '1h' });
-                return res.json({userID: userDoc.uid, username: userDoc.username, authToken: token});
+                return res.json({userID: userDoc.uid, username: userDoc.username, role: userDoc.role, authToken: token});
             } else {
                 return res.status(401).end("incorrect password");
             }
