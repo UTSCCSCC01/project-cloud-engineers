@@ -1,4 +1,5 @@
 import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import logo from '../logo.svg';
 import '../Styles/App.css';
@@ -16,6 +17,7 @@ function Home() {
             <p> Add some shtings here</p>
 
             <a onClick={() => auth.signOut(() => history.push("/"))}><strong>Log Out</strong></a>
+            <Link class="App-link" to={'/user-preferences'}>Update Profile</Link>
             
           </header>
     </div>

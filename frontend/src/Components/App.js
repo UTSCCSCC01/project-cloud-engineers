@@ -7,6 +7,7 @@ import Home from './Home';
 
 import logo from '../logo.svg';
 import '../Styles/App.css';
+import UserPreferences from './UserPreferences';
 
 
 function App() {
@@ -32,6 +33,9 @@ function App() {
         </Route>
         <PrivateRoute path="/home">
           <Home />
+        </PrivateRoute>
+        <PrivateRoute path="/user-preferences">
+          <UserPreferences/>
         </PrivateRoute>
       </Switch>
     </div>
