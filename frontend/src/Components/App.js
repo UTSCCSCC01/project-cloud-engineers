@@ -1,5 +1,4 @@
-import { Switch, Route, Link } from 'react-router-dom'
-
+import { Switch, Route, Link } from 'react-router-dom';
 import { useAuth, PrivateRoute } from './Utils/Auth';
 import Register from './Register';
 import Login from './Login';
