@@ -3,7 +3,8 @@ import { useAuth, PrivateRoute } from './Utils/Auth';
 import Register from './Register';
 import Login from './Login';
 import Home from './Home';
-
+import Elearning from './ELearning/ELearning';
+import Community from './Community/Community';
 import logo from '../logo.svg';
 import '../Styles/App.css';
 
@@ -31,6 +32,12 @@ function App() {
         </Route>
         <PrivateRoute path="/home">
           <Home />
+        </PrivateRoute>
+        <PrivateRoute path="/community">
+          <Community/>
+        </PrivateRoute>
+        <PrivateRoute path="/e-learning">
+          <Elearning/>
         </PrivateRoute>
       </Switch>
     </div>
