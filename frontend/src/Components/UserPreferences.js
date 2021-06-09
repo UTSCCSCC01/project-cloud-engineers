@@ -21,8 +21,8 @@ function UserPreferences() {
   console.log(uid);
 
   // Specifying which fields are editable
-  const editableFields = ['username', 'firstname', 'lastname', 'bio', 'school'];
-  const fieldLabels = ["Username", "First Name", "Last Name", "Bio", 'School'];
+  const editableFields = ['username', 'firstname', 'lastname', 'bio'];
+  const fieldLabels = ["Username", "First Name", "Last Name", "Bio"];
   
 
   // Allows for toggling between rendering profile view mode and profile edit mode
@@ -38,6 +38,7 @@ function UserPreferences() {
       setInputs(inputsCopy);
   };
 
+  // Save Changes upon completing form
   const handleSaveChanges = (event) => {
 
     // Prevents page refresh upon form submission
@@ -62,12 +63,14 @@ function UserPreferences() {
     setRenderViewState(true);
   };
 
+  // Switches render to allow editing profile information
   const handleEdit = () => {
       setRenderViewState(false);
       const newInputs = editableFields.map((f) => user[0][f] ? user[0][f] : "");
       setInputs(newInputs);
   };
   
+  // Handles cancelling profile edits
   const handleCancel = () => {
     console.log(inputs);
     setRenderViewState(true);
