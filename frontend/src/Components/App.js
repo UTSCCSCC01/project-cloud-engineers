@@ -1,10 +1,11 @@
-import { Switch, Route, Link } from 'react-router-dom'
-
+import { Switch, Route, Link } from 'react-router-dom';
 import { useAuth, PrivateRoute } from './Utils/Auth';
 import Register from './Register';
 import Login from './Login';
 import Home from './Home';
-
+import Elearning from './ELearning/ELearning';
+import Community from './Community/Community';
+import Admin from "./Admin/Admin";
 import logo from '../logo.svg';
 import '../Styles/App.css';
 import UserPreferences from './UserPreferences';
@@ -25,18 +26,35 @@ function App() {
 
           </header>
         </Route>
+        
         <Route exact path='/register'>
           <Register />
         </Route>
+        
         <Route exact path='/login'>
           <Login />
         </Route>
+        
         <PrivateRoute path="/home">
           <Home />
         </PrivateRoute>
+        
         <PrivateRoute path="/user-preferences">
           <UserPreferences/>
         </PrivateRoute>
+        
+        <PrivateRoute path="/community">
+          <Community/>
+        </PrivateRoute>
+        
+        <PrivateRoute path="/e-learning">
+          <Elearning/>
+        </PrivateRoute>
+        
+        <PrivateRoute path="/admin">
+          <Admin/>
+        </PrivateRoute>
+        
       </Switch>
     </div>
   );
