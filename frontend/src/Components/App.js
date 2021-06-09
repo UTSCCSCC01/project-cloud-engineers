@@ -5,6 +5,7 @@ import Login from './Login';
 import Home from './Home';
 import Elearning from './ELearning/ELearning';
 import Community from './Community/Community';
+import Admin from "./Admin/Admin";
 import logo from '../logo.svg';
 import '../Styles/App.css';
 
@@ -38,6 +39,9 @@ function App() {
         </PrivateRoute>
         <PrivateRoute path="/e-learning">
           <Elearning/>
+        </PrivateRoute>
+        <PrivateRoute path="/admin">
+          <Admin/>
         </PrivateRoute>
       </Switch>
     </div>
