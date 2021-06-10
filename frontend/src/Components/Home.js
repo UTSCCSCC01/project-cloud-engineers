@@ -2,6 +2,7 @@ import { useHistory } from "react-router-dom";
 import '../Styles/Home.css';
 import Card from './HomePage/Card';
 import { useAuth } from './Utils/Auth'
+import { Link } from 'react-router-dom'
 
 function Home() {
   let auth = useAuth();
@@ -38,6 +39,8 @@ function Home() {
               <></>
             }
         </div>
+      <Link to={'/user-preferences'}>Update Profile</Link>
+      <br></br>
       <a onClick={() => auth.signOut(() => history.push("/"))}><strong>Log Out</strong></a>
     </div>
   );
