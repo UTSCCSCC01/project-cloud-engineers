@@ -55,6 +55,9 @@ function App() {
           <Admin/>
         </PrivateRoute>
         
+        <PrivateRoute path="/user-preferences">
+          <UserPreferences/>
+        </PrivateRoute>
       </Switch>
     </div>
   );
