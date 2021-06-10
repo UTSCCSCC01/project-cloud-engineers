@@ -1,5 +1,4 @@
-import { Switch, Route, Link } from 'react-router-dom'
-
+import { Switch, Route, Link } from 'react-router-dom';
 import { useAuth, PrivateRoute } from './Utils/Auth';
 import Register from './Register';
 import Login from './Login';
@@ -10,8 +9,10 @@ import Preincubation from './ELearning/Stages/Preincubation'
 import Incubation from './ELearning/Stages/Incubation'
 import ImpactAnalysis from './ELearning/Stages/ImpactAnalysis'
 import Implementation from './ELearning/Stages/Implementation'
+import Admin from "./Admin/Admin";
 import logo from '../logo.svg';
 import '../Styles/App.css';
+import UserPreferences from './UserPreferences';
 
 
 function App() {
@@ -29,33 +30,55 @@ function App() {
 
           </header>
         </Route>
+        
         <Route exact path='/register'>
           <Register />
         </Route>
+        
         <Route exact path='/login'>
           <Login />
         </Route>
+        
         <PrivateRoute path="/home">
           <Home />
         </PrivateRoute>
+        
+        <PrivateRoute path="/user-preferences">
+          <UserPreferences/>
+        </PrivateRoute>
+        
         <PrivateRoute path="/community">
           <Community/>
         </PrivateRoute>
+        
         <PrivateRoute path="/e-learning">
           <Elearning/>
         </PrivateRoute>
+
         <PrivateRoute path="/stages/preincubation">
           <Preincubation/>
         </PrivateRoute>
+
         <PrivateRoute path="/stages/incubation">
           <Incubation/>
         </PrivateRoute>
+
         <PrivateRoute path="/stages/impactanalysis">
           <ImpactAnalysis/>
         </PrivateRoute>
+
         <PrivateRoute path="/stages/implementation">
           <Implementation/>
+        </PrivateRoute>     
+
+        <PrivateRoute path="/admin">
+          <Admin/>
         </PrivateRoute>
+
+        <PrivateRoute path="/user-preferences">
+          <UserPreferences/>
+        </PrivateRoute>
+        
       </Switch>
     </div>
   );
