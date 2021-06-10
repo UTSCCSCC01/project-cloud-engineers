@@ -5,6 +5,10 @@ import Login from './Login';
 import Home from './Home';
 import Elearning from './ELearning/ELearning';
 import Community from './Community/Community';
+import Preincubation from './ELearning/Stages/Preincubation'
+import Incubation from './ELearning/Stages/Incubation'
+import ImpactAnalysis from './ELearning/Stages/ImpactAnalysis'
+import Implementation from './ELearning/Stages/Implementation'
 import Admin from "./Admin/Admin";
 import logo from '../logo.svg';
 import '../Styles/App.css';
@@ -50,14 +54,31 @@ function App() {
         <PrivateRoute path="/e-learning">
           <Elearning/>
         </PrivateRoute>
-        
+
+        <PrivateRoute path="/stages/preincubation">
+          <Preincubation/>
+        </PrivateRoute>
+
+        <PrivateRoute path="/stages/incubation">
+          <Incubation/>
+        </PrivateRoute>
+
+        <PrivateRoute path="/stages/impactanalysis">
+          <ImpactAnalysis/>
+        </PrivateRoute>
+
+        <PrivateRoute path="/stages/implementation">
+          <Implementation/>
+        </PrivateRoute>     
+
         <PrivateRoute path="/admin">
           <Admin/>
         </PrivateRoute>
-        
+
         <PrivateRoute path="/user-preferences">
           <UserPreferences/>
         </PrivateRoute>
+        
       </Switch>
     </div>
   );
