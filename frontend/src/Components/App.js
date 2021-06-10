@@ -8,7 +8,6 @@ import Community from './Community/Community';
 import Admin from "./Admin/Admin";
 import logo from '../logo.svg';
 import '../Styles/App.css';
-import UserPreferences from './UserPreferences';
 
 
 function App() {

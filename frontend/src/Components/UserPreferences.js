@@ -38,6 +38,7 @@ function UserPreferences() {
       setInputs(inputsCopy);
   };
 
+
   // Save Changes upon completing form
   const handleSaveChanges = (event) => {
 
@@ -62,6 +63,7 @@ function UserPreferences() {
 
     setRenderViewState(true);
   };
+  
 
   // Switches render to allow editing profile information
   const handleEdit = () => {
