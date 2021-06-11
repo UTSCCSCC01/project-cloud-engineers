@@ -1,17 +1,17 @@
-##Meeting Information:
+## Meeting Information:
 
 RPM DATE: 2/6/2021 
 Time: 4pm 
 Location: Discord Team channel
 Participants: Smit Patel, Anis Saha, Mustafa Hafeez,Saad Raza, Abdullah Khan (Everyone Present).
 
-##Sprint Goals:
+## Sprint Goals:
 
 In this sprint, the goal is to setup a functioning project with linked front end and 
 backend while, each member becomes familiar with the tech stack that we will be using 
 throughout the project.
 
-##UserStories Distribution:
+## UserStories Distribution:
 
 Sprint 1:
 
@@ -57,11 +57,11 @@ h) Create E-Learning initial stages: CLOUD-6 Assignee: Mustafa Hafeez Story Poin
 
 	-Establish db connection and display stages in react frontend
 
-##Team Capacity: 
+## Team Capacity: 
 
 The total points targeted to be completed by the end of this sprint is 61. We wish to complete 65 points in our next sprint
 and will be targetting similar points for the upcoming sprints.
 
-##Spikes:
+## Spikes:
 
 There were no spikes during this sprint.

@@ -1,17 +1,17 @@
-##Meeting Information:
+## Meeting Information:
 
 RPM DATE: 7/6/2021 
 Time: 4pm 
 Location: Discord Team channel
 Participants: Smit Patel, Anis Saha, Mustafa Hafeez,Saad Raza, Abdullah Khan (Everyone Present).
 
-##Release Goals:
+## Release Goals:
 
 From a bird's eye view our goal for our first release(in August), will be to complete all of our 
 user stories and their linked subtasks done, and end up with a functioning application that alligns with the 
 best interest of our product owner, looks professional and is easy to use for the user.
 
-##Core Features that are to be part of Release:
+## Core Features that are to be part of Release:
 
 1.User Authentication and Customization: Allow the users to register, login, logout and customize their accounts
                                          with their abilities being specific to their roles.
@@ -33,7 +33,7 @@ Along with the implementation of the functionalities, sprints should be well doc
 
 Details specific to user stories are provided below.
 
-##Release Plan/Scope:
+## Release Plan/Scope:
 
 We have decided as a team to merge our develop branch into main(sub-releases) at the last day of every sprint, and
 if the course does not allow that, meaning we can only merge at the end of the term, we will consider these theoretical 
