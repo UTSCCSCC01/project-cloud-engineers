@@ -1,61 +1,30 @@
+
+# Sprint 1
+
 ## Meeting Information:
 
-RPM DATE: 2/6/2021 
-Time: 4pm 
-Location: Discord Team channel
-Participants: Smit Patel, Anis Saha, Mustafa Hafeez,Saad Raza, Abdullah Khan (Everyone Present).
+- __RPM Date__: 2/6/2021 
+- __Time__: 4pm
+- __Location__: Discord Team channel
+- __Participants__: Smit Patel, Anis Saha, Mustafa Hafeez,Saad Raza, Abdullah Khan (Everyone Present).
 
 ## Sprint Goals:
 
-In this sprint, the goal is to setup a functioning project with linked front end and 
-backend while, each member becomes familiar with the tech stack that we will be using 
-throughout the project.
+The main focus of this sprint was to develop the critical/core features on which the rest of the platform will depend on. 
+In addition, we also aimed that each team member becomes familiar with the codebase and the technologies being used for this
+project.
 
 ## UserStories Distribution:
 
-Sprint 1:
-
-a) Prepare initial project front end and backend infrastructure: CLOUD-2 Asignee: Saad Raza Story Points: N/A
-	-No sub tasks.
-
-b) Complete feature that allows users to register for application: CLOUD-2 Asignee: Saad Raza Story Points: 8
- 	Subtasks:
-        -create auth controller component to manage auth state 
-	-create react register component.
-
-c) Complete feature that registered users to login: CLOUD-3 Asignee: Saad Raza Story Points: 8 
-	Subtasks:
-	-create login route in auth microservice 	
-
-	-create login component 	
-
-	-create auth controller component to manage auth state
-     
-d) Complete feature that allows logged in users to logout: CLOUD-7 Asignee:  Saad Raza Story Points: 8
-	Subtasks:
-	-create logout route in auth microservice
-
-e) Complete homepage that allows navigation between community and e-learning features: CLOUD-11 Asignee: Abdullah Khan Story Points: 5
-	Subtasks:
-	-create selection page for community and e-learning platforms.
-
-f) Allow users to set account preferences after logging in: CLOUD-9 Asignee: Anis Saha Story Points: 12
-	Subtasks:
-	-Create dedicated Page for user preferences 	
-
-	-create interface for changing bio and name
-
-g) Create admin functionalities for logged in users: CLOUD-15 Assignee: Smit Patel Story Points: Story Points: 12
-	Subtasks:
-	-Add different roles for users in database. 	Sub-task 	DONE 	Smit Patel 	Actions
-
-	-Admin Settings Page
-
-h) Create E-Learning initial stages: CLOUD-6 Assignee: Mustafa Hafeez Story Points: 8
-	Subtasks:
-	-Create stages in database 	
-
-	-Establish db connection and display stages in react frontend
+Story Number | Description | Points | Subtasks | Assignee 
+-------------|-------------| ------ |----------|---------
+__CLOUD2__ | As a unregistered user, I want to sign up so that my information is specific/saved to my account. | 8 |<ul> <li>[x] __CLOUD26__: Create Auth microservice with register route</li> <li>[x] __CLOUD27__: Create react register component</li> </ul>  |  Muhammad Raza
+__CLOUD3__ | As a registered user, I want to log into my account to see my preferences | 8 |<ul> <li>[x] __CLOUD28__: Create login route in auth microservice</li> <li>[x] __CLOUD29__: Create login component</li>   <li>[x] __CLOUD30__: Create auth controller component to manage auth state</li> </ul> |  Muhammad Raza
+__CLOUD7__ | As a logged in user, I want to log out of the application.| 8 | <ul> <li>[x] __CLOUD31__: Create logout route in auth microservice</li>  </ul>  |  Muhammad Raza
+__CLOUD11__ | As a logged in user, I want to have access to the Community Space & E-Learning Space so that I can navigate the application appropriately.| 5 | <ul> <li>[x] __CLOUD35__: Add selection options in Homepage, that allows a logged in user to access Community and E-learning Platform</li>  </ul> |  Mohammed Abdullah Khan
+__CLOUD15__ | As an admin I want to be able to assign moderator roles to users so that they can monitor and manage the community space.| 12 | <ul> <li>[x] __CLOUD-32__: Add different roles for users in database.</li> <li>[x] __CLOUD33__: Admin Settings Page.</li> </ul> |  Smit Patel
+__CLOUD6__ | As an admin, I want to be able to change the current stages inside E-Learning space to aid African entrepreneurs to provide end to end experience - A stage consists of specific tasks to guide the entrepreneurs. | 8 |<ul> <li>[x] __CLOUD36__: Create stages in database.</li> <li>[x] __CLOUD37__: Establish db connection and display stages in react frontend.</li> </ul> |  Mustafa Hafeez
+__CLOUD9__ | As a logged in user, I want to change my account preferences (Bio/Avatar/etc) so that I can express myself freely.| 12 | <ul> <li>[x] __CLOUD38__: Create dedicated Page for user preferences.</li> <li>[x] __CLOUD39__: create interface for changing bio and name.</li> </ul> |   Anis Saha
 
 ## Team Capacity: 
 
