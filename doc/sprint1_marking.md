@@ -221,7 +221,7 @@ Tracking on Jira Total Mark: 15 / 20
     - 8 marks = features presented work flawlessly
     - 1 mark removed for each error or missing records on Jira
 
-  Your Mark: __ / 10
+  Your Mark: 10 / 10
 
 ---
 
