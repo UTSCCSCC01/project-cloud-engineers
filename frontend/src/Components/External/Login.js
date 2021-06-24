@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useHistory, Link } from "react-router-dom";
-import { useAuth } from './Utils/Auth';
+import { useAuth } from '../Utils/Auth';
 
 function Login(props) {
   const [form, updateForm] = useState({ email: "", password: "" });

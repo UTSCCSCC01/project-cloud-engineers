@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 
-import { useAuth } from './Utils/Auth';
+import { useAuth } from '../Utils/Auth';
 
 
 function Register(props) {

@@ -1,8 +1,8 @@
 import { Switch, Route, Link } from 'react-router-dom';
 import { useAuth, PrivateRoute } from './Utils/Auth';
-import Register from './Register';
-import Login from './Login';
-import Home from './Home';
+import Register from './External/Register';
+import Login from './External/Login';
+import Home from './Home/Home';
 import Elearning from './ELearning/ELearning';
 import Community from './Community/Community';
 import Preincubation from './ELearning/Stages/Preincubation'
@@ -41,42 +41,6 @@ function App() {
         
         <PrivateRoute path="/home">
           <Home />
-        </PrivateRoute>
-        
-        <PrivateRoute path="/user-preferences">
-          <UserPreferences/>
-        </PrivateRoute>
-        
-        <PrivateRoute path="/community">
-          <Community/>
-        </PrivateRoute>
-        
-        <PrivateRoute path="/e-learning">
-          <Elearning/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/preincubation">
-          <Preincubation/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/incubation">
-          <Incubation/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/impactanalysis">
-          <ImpactAnalysis/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/implementation">
-          <Implementation/>
-        </PrivateRoute>     
-
-        <PrivateRoute path="/admin">
-          <Admin/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/user-preferences">
-          <UserPreferences/>
         </PrivateRoute>
         
       </Switch>
