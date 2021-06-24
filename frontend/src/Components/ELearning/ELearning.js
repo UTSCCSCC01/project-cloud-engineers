@@ -18,15 +18,13 @@ function Elearning() {
   return (
     <Switch>
       <Route exact path={path}>
-
         <div className="home__page">
           <Link to={`${path}/testurlid`}>Its a me</Link>
 
           {loading ? <p>Loading...</p> : (
             error ? <p>{console.log(error)}Error...</p> :
               <div className="selectionPage">
-                {
-                  data.map(course => {
+                { data.map(course => {
                     return (
                       <Card
                         imgSrc="https://www.elegantthemes.com/blog/wp-content/uploads/2020/06/Divi-Community-Update-May-2020-scaled.jpg"
@@ -39,15 +37,13 @@ function Elearning() {
                     )
                   })
                 }
-
               </div>
-          )}
+            )}
         </div>
-
       </Route>
 
       <Route path={`${path}/:courseId`}>
-        <Course title="test course cameing from learning" />
+        <Course />
       </Route>
 
     </Switch>
