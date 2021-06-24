@@ -64,7 +64,7 @@ function Home() {
         <Admin />
       </Route>
 
-      <Route patpath={`${path}/user-preferences`}>
+      <Route path={`${path}/user-preferences`}>
         <UserPreferences />
       </Route>
 
