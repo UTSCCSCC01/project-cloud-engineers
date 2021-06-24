@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {useFirebase} from '../Utils/Firebase';
+import { useFirebase } from '../Utils/Firebase';
 import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
-import { Sidenav, Nav, Icon, Dropdown } from 'rsuite';
+import { useParams } from 'react-router-dom';
+
+import { Sidenav, Nav, Icon } from 'rsuite';
 
 function Course(props) {
+    let { courseId } = useParams();
+
     let firebase = useFirebase();
     let db = firebase.firestore();
     let user = JSON.parse(localStorage.getItem("user"));
@@ -21,7 +25,8 @@ function Course(props) {
     
     return (
         <div>
-            <h2>THIS is inside a course tings eh {props.title}</h2>
+            <h2>Title given in props: this aint gonna be used through {props.title}</h2>
+            <h2>course id from url params {courseId}</h2>
             <div style={{ width: 250 }}>
                 <Sidenav defaultOpenKeys={['3', '4']} activeKey="1">
                 <Sidenav.Body>

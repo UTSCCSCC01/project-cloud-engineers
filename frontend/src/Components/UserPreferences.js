@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import { useHistory } from "react-router-dom";
 import '../Styles/App.css';
 
 import { useAuth } from './Utils/Auth';
@@ -9,7 +8,6 @@ import { useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore"
 
 function UserPreferences() {
-  const auth = useAuth();
 
   const firebase = useFirebase();
   const db = firebase.firestore();

@@ -1,17 +1,19 @@
 import { Switch, Route, Link, useHistory, useRouteMatch } from 'react-router-dom';
-import '../../Styles/Home.css';
-import Card from './Card';
-import { useAuth } from '../Utils/Auth';
 
+import { useAuth } from '../Utils/Auth';
 import Community from '../Community/Community';
 import Elearning from '../ELearning/ELearning';
 import Admin from '../Admin/Admin';
 import UserPreferences from '../UserPreferences';
+import Card from '../Utils/Card';
+import '../../Styles/Home.css';
+
 
 function Home() {
+  let user = JSON.parse(localStorage.user);
   let auth = useAuth();
   let history = useHistory();
-  let { path, url } = useRouteMatch();
+  let { path } = useRouteMatch();
 
   return (
     <Switch>
@@ -34,7 +36,7 @@ function Home() {
             />
             {
               // Render Admin setting only for admins.
-              JSON.parse(localStorage.user).role === "admin" ?
+              user.role === "admin" ?
                 <Card
                   imgSrc="https://bryanu.edu/wp-content/uploads/2019/08/Multitasking.jpg"
                   title="Admin Settings"

@@ -6,7 +6,7 @@ function Card({imgSrc, title, description, linkPath, buttonText}) {
     return (
         <div className="card">
             <div className="card__image">
-                <img src = {imgSrc}/>    
+                <img src = {imgSrc} alt="ops"/>    
             </div>            
             <div className="card__text">
                 <h2>{title}</h2>

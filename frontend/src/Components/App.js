@@ -1,18 +1,12 @@
 import { Switch, Route, Link } from 'react-router-dom';
-import { useAuth, PrivateRoute } from './Utils/Auth';
+import { PrivateRoute } from './Utils/Auth';
+
 import Register from './External/Register';
 import Login from './External/Login';
 import Home from './Home/Home';
-import Elearning from './ELearning/ELearning';
-import Community from './Community/Community';
-import Preincubation from './ELearning/Stages/Preincubation'
-import Incubation from './ELearning/Stages/Incubation'
-import ImpactAnalysis from './ELearning/Stages/ImpactAnalysis'
-import Implementation from './ELearning/Stages/Implementation'
-import Admin from "./Admin/Admin";
 import logo from '../logo.svg';
 import '../Styles/App.css';
-import UserPreferences from './UserPreferences';
+
 
 
 function App() {
