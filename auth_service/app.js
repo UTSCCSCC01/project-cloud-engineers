@@ -105,6 +105,21 @@ app.post('/logout', async (req, res) => {
 });
 
 app.post('/verify', async (req, res) => {
+    let authHeader = req.headers['authorization'];
+    let token = authHeader && authHeader.split(' ')[1];
+    if (token == null) {
+        return res.sendStatus(401);
+    }
+    
+    jwt.verify(token, TOKEN_SECRET, function (err, decoded) {
+        if (err) {
+            console.log("expired token" , token);
+            return res.status(401).json({});
+        } else {
+            console.log("valid token" , token);
+            return res.status(200).json({});
+        }
+    });
 })
 
 const PORT = process.env.PORT || 8080;

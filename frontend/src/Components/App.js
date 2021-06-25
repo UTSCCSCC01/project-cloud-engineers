@@ -1,21 +1,25 @@
-import { Switch, Route, Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Switch, Route, Link, useHistory, useLocation } from 'react-router-dom';
 import { useAuth, PrivateRoute } from './Utils/Auth';
-import Register from './Register';
-import Login from './Login';
-import Home from './Home';
-import Elearning from './ELearning/ELearning';
-import Community from './Community/Community';
-import Preincubation from './ELearning/Stages/Preincubation'
-import Incubation from './ELearning/Stages/Incubation'
-import ImpactAnalysis from './ELearning/Stages/ImpactAnalysis'
-import Implementation from './ELearning/Stages/Implementation'
-import Admin from "./Admin/Admin";
+
+import Register from './External/Register';
+import Login from './External/Login';
+import Home from './Home/Home';
 import logo from '../logo.svg';
 import '../Styles/App.css';
-import UserPreferences from './UserPreferences';
+
 
 
 function App() {
+  let auth = useAuth();
+  let history = useHistory();
+
+  useEffect(() => {
+    auth.checkSession(() => {
+      history.push('/home');
+    });
+  }, []);
+
   return (
     <div className="App">
       <Switch>
@@ -30,55 +34,15 @@ function App() {
 
           </header>
         </Route>
-        
         <Route exact path='/register'>
           <Register />
         </Route>
-        
         <Route exact path='/login'>
           <Login />
         </Route>
-        
         <PrivateRoute path="/home">
           <Home />
         </PrivateRoute>
-        
-        <PrivateRoute path="/user-preferences">
-          <UserPreferences/>
-        </PrivateRoute>
-        
-        <PrivateRoute path="/community">
-          <Community/>
-        </PrivateRoute>
-        
-        <PrivateRoute path="/e-learning">
-          <Elearning/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/preincubation">
-          <Preincubation/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/incubation">
-          <Incubation/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/impactanalysis">
-          <ImpactAnalysis/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/stages/implementation">
-          <Implementation/>
-        </PrivateRoute>     
-
-        <PrivateRoute path="/admin">
-          <Admin/>
-        </PrivateRoute>
-
-        <PrivateRoute path="/user-preferences">
-          <UserPreferences/>
-        </PrivateRoute>
-        
       </Switch>
     </div>
   );
