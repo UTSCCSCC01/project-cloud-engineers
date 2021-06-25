@@ -1,5 +1,6 @@
-import { Switch, Route, Link } from 'react-router-dom';
-import { PrivateRoute } from './Utils/Auth';
+import React, { useEffect, useState } from "react";
+import { Switch, Route, Link, useHistory, useLocation } from 'react-router-dom';
+import { useAuth, PrivateRoute } from './Utils/Auth';
 
 import Register from './External/Register';
 import Login from './External/Login';
@@ -10,6 +11,15 @@ import '../Styles/App.css';
 
 
 function App() {
+  let auth = useAuth();
+  let history = useHistory();
+
+  useEffect(() => {
+    auth.checkSession(() => {
+      history.push('/home');
+    });
+  }, []);
+
   return (
     <div className="App">
       <Switch>
@@ -24,19 +34,15 @@ function App() {
 
           </header>
         </Route>
-        
         <Route exact path='/register'>
           <Register />
         </Route>
-        
         <Route exact path='/login'>
           <Login />
         </Route>
-        
         <PrivateRoute path="/home">
           <Home />
         </PrivateRoute>
-        
       </Switch>
     </div>
   );

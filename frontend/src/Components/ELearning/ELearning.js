@@ -28,10 +28,10 @@ function Elearning() {
                     return (
                       <Card
                         imgSrc="https://www.elegantthemes.com/blog/wp-content/uploads/2020/06/Divi-Community-Update-May-2020-scaled.jpg"
-                        key={course.id}
+                        key={course.Id}
                         title={course.title}
                         description={course.description}
-                        linkPath={`${path}/${course.id}`}
+                        linkPath={`${path}/${course.courseId}`}
                         buttonText="Go to course"
                       />
                     )
