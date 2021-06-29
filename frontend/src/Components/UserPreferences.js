@@ -203,11 +203,11 @@ function ProfilePicture({user}) {
 
             //delete old avatar (called when new avatar and old avatar have different extentions)
             const deleteOldProfilePic = async () => {
-                if (fileExt === profileImageExtention){
+                if (fileExt !== profileImageExtention){
                     console.log('new file extention detected, removing old file')
                     storage.ref('users/' + user[0].uid + AVATAR_FILENAME + profileImageExtention).delete()
                     .then(console.log('old file succesfully deleted'))
-                    .err(console.log('old file not found in user folder and could not be deleted'))
+                    .catch(console.log('old file not found in user folder and could not be deleted'))
 
                 }
             }
