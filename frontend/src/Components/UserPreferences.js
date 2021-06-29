@@ -3,14 +3,14 @@ import '../Styles/App.css';
 
 import { useAuth } from './Utils/Auth'
 import { useFirebase } from './Utils/Firebase';
-import React, { useState } from "react";
 
-import { Card } from './HomePage/Card'
+import React, { useState } from "react";
 
 import { useCollectionData } from "react-firebase-hooks/firestore"
 
 const PLACEHOLDER_PROFILE_PIC = "https://www.ssu.ca/wp-content/uploads/2020/08/default-profile.png";
-const USER_PIC_FIELDNAME = "profilePicture";
+const AVATAR_FILENAME = 'profile.'
+const USER_PIC_FIELDNAME = "avatar";
 
 const DB_USER_LOCATION = 'users';
 
@@ -117,8 +117,6 @@ function UserPreferences() {
     console.log(user)
     
     return (
-
-        
         <div>
             <ProfilePicture user={user}/>
 
@@ -159,23 +157,27 @@ function ProfilePicture({user}) {
     const firebase = useFirebase();
     const db = firebase.firestore();
 
+    const profileImageSrc = user[0][USER_PIC_FIELDNAME] ? user[0][USER_PIC_FIELDNAME] : PLACEHOLDER_PROFILE_PIC;
+    const profileImageExtention = getFileExtFromURL(profileImageSrc);
 
-    const profileImageSrc = user[0][USER_PIC_FIELDNAME] ? URL.createObjectURL(user[0][USER_PIC_FIELDNAME]) : PLACEHOLDER_PROFILE_PIC;
-
+    const [fileExt, setFileExt] = useState(profileImageExtention);
     const [file, setFile] = useState(null); 
+    const [fileURL, setFileURL] = useState(profileImageSrc);
     const [isRenderViewState, setIsRenderViewState] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
-
 
     const handleUploadChange = async ({target: {files} }) => {
-        setIsLoading(true);
+        //setIsLoading(true);
 
         const file = files[0];
         await new Promise(response => {
-            setTimeout(() => {
-                response(setFile(file))
-            })
+                response(setFile(file))      
         }, 2000);
+
+        const filePath = document.getElementById('upload').value;
+        console.log("filepath: " + filePath);
+
+        setFileURL(URL.createObjectURL(file));
+        setFileExt(filePath.split('.').pop());
     }
 
     const handleClickUpdate = () => {
@@ -185,26 +187,55 @@ function ProfilePicture({user}) {
     const handleClickCancel = () => {
         setFile(null);
         setIsRenderViewState(true);
+        setFileURL(profileImageSrc);
+        setFileExt(profileImageExtention);
     }
 
-    const handleClickUpload = () => {
+    const handleClickUpload = async () => {
 
         if (file) {
-        db.collection(DB_USER_LOCATION).doc(user[0].uid).update({[USER_PIC_FIELDNAME]: file})
-        .then(
-            (val) => {
-                console.log('Profile Backend Updated!', val);
-            },
-            (err) => {
-                console.log('Could not update profile :(', err);
-            }
-        );
-        
-        setFile(null);
-        setIsRenderViewState(true);
-        }
-        
 
+            const storage = firebase.storage();
+            const fileRef = storage.ref('users/' + user[0].uid + '/' + AVATAR_FILENAME + fileExt);
+            
+            let newFileURL = null;
+            console.log(newFileURL);
+
+            //delete old avatar (called when new avatar and old avatar have different extentions)
+            const deleteOldProfilePic = async () => {
+                if (fileExt === profileImageExtention){
+                    console.log('new file extention detected, removing old file')
+                    storage.ref('users/' + user[0].uid + AVATAR_FILENAME + profileImageExtention).delete()
+                    .then(console.log('old file succesfully deleted'))
+                    .err(console.log('old file not found in user folder and could not be deleted'))
+
+                }
+            }
+
+            let errOccured = false;
+            await fileRef.put(file)
+            .then(() => fileRef.getDownloadURL())
+            .then(url => newFileURL = url)
+            .catch(() => errOccured = true);
+
+            errOccured ? console.log('image upload failed') : deleteOldProfilePic();
+
+            console.log(newFileURL);
+
+            db.collection(DB_USER_LOCATION).doc(user[0].uid).update({[USER_PIC_FIELDNAME]: newFileURL})
+            .then(
+                (val) => {
+                    console.log('Profile Backend Updated!', val);
+                },
+                (err) => {
+                    console.log('Could not update profile :(', err);
+                });
+            
+            
+            setFile(null);
+            setIsRenderViewState(true);
+            setFileURL(newFileURL);
+        }
     }
 
     const renderViewMode = () => {
@@ -219,11 +250,12 @@ function ProfilePicture({user}) {
         return (
         <div>
             <input
+            id="upload"
             type="file"
             onChange={handleUploadChange}/>
             <div>
-                <button onclick={handleClickUpload}>Upload</button>
-                <button onclick={handleClickCancel}>Cancel</button>
+                <button onClick={handleClickUpload}>Upload</button>
+                <button onClick={handleClickCancel}>Cancel</button>
             </div>
         </div>
         )
@@ -234,7 +266,8 @@ function ProfilePicture({user}) {
         <div>
             <div>
                 <img 
-                src = {file ? URL.createObjectURL(file) : profileImageSrc} 
+                src = {fileURL} 
+                alt="avatar"
                 width = "200"
                 height = "200"/> 
             </div>
@@ -242,6 +275,12 @@ function ProfilePicture({user}) {
         </div>
 
     );
+}
+
+//return the file extention (e.g. 'png', 'jpg') from a file url
+function getFileExtFromURL(fileURL) {
+    return (fileURL.split('?')[0]).split('.')
+        .pop();
 }
 
 export default UserPreferences;
