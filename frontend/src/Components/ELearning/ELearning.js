@@ -14,7 +14,10 @@ function Elearning() {
   let firebase = useFirebase();
   let db = firebase.firestore();
 
-  const [data, loading, error] = useCollectionDataOnce(db.collection("courses").where('students', 'array-contains', `${user.userID}`));
+  const [data, loading, error] = useCollectionDataOnce(
+    user.role === 'instructor' ? db.collection("courses") :
+    db.collection("courses").where('students', 'array-contains', `${user.userID}`)
+  );
 
   return (
     <Switch>
@@ -29,7 +32,7 @@ function Elearning() {
                     return (
                       <Card
                         imgSrc="https://www.elegantthemes.com/blog/wp-content/uploads/2020/06/Divi-Community-Update-May-2020-scaled.jpg"
-                        key={course.Id}
+                        key={course.courseId}
                         title={course.title}
                         description={course.description}
                         linkPath={`${path}/${course.courseId}`}
