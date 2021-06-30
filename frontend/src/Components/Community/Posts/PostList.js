@@ -17,9 +17,49 @@ function PostList() {
 
     let user = JSON.parse(localStorage.user);
     const [caption, setcaption] = useState('');
-    const [img, setimg] = useState('');
+    const [image, setImage] = useState(null);
+    const [url, setUrl] = useState("");
+    const [progress, setProgress] = useState(0);
     const [posts, setposts] = useState([]);
     const [comments, setcomments] = useState([]);
+    const [newID, setnewID] = useState(nanoid())
+    
+    const handleChange = e => {
+        if (e.target.files[0]) {
+          setImage(e.target.files[0]);
+        }
+    };
+
+    const handleCaptionChange = e => {
+        setcaption(e.target.value);
+        setnewID(nanoid());
+    }
+    
+    const handleUpload = () => {
+        const uploadTask = firebase.storage().ref('media/posts/'+newID+'/' + image.name).put(image);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+              const progress = Math.round(
+                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+              );
+              setProgress(progress);
+            },
+            error => {
+              console.log(error);
+            },
+            () => {
+              firebase.storage()
+                .ref('media/posts/'+newID+'/')
+                .child(image.name)
+                .getDownloadURL()
+                .then(url => {
+                  setUrl(url);
+                  console.log("URL:", url);
+                });
+            }
+          );
+    }
 
     useEffect(() => {
         db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => (
@@ -30,7 +70,6 @@ function PostList() {
     function addPost(event){
 
         event.preventDefault();
-        const newID = nanoid();
         
         const post = {
             content: caption,
@@ -41,6 +80,7 @@ function PostList() {
             privacy: 'public',
             attachments:[],
             postId: newID,
+            media: url,
         }
         
         db.collection('posts').doc(newID).set({
@@ -52,6 +92,7 @@ function PostList() {
             privacy: 'public',
             attachments:[],
             postId: newID,
+            media: url,
         })
         .then((docRef) => {
             console.log("added post to firestore!")
@@ -61,6 +102,8 @@ function PostList() {
         });
 
         setcaption('');
+        setImage(null);
+        setUrl('');
     }
 
     return (
@@ -71,13 +114,13 @@ function PostList() {
                     <div className="postList__form">                    
                             <FormControl>
                                 <InputLabel>Add a caption!</InputLabel>
-                                <Input className="inputbox" value={caption} onChange={event => setcaption(event.target.value)}></Input>
+                                <Input className="inputbox" value={caption} onChange={handleCaptionChange}></Input>
                             </FormControl>
                     </div>
                     
                     <div className="postList__media">
-                        <span>file.png successfully!</span>
-                        <Button color="primary" className="mediabtn"> <AddPhotoAlternateIcon/> Add Media</Button>
+                        <input className="filebtn" type="file" onChange={handleChange} />
+                        <Button disabled={!caption} color="primary" className="mediabtn" onClick={handleUpload}> <AddPhotoAlternateIcon/> Add Media</Button>
                     </div>
 
                     <div className="postList__btn">
@@ -92,6 +135,7 @@ function PostList() {
                         content={post.content}
                         username={post.authorName}
                         timestamp={post.timestamp}
+                        media={post.media}
                     />
                 ))}                
             </div>
