@@ -4,6 +4,7 @@ import { Switch, Route, useRouteMatch, Link } from 'react-router-dom';
 
 import { useFirebase } from '../Utils/Firebase';
 import Course from './Course';
+import CreateCourse from './CreateCourse';
 import Card from '../Utils/Card';
 
 function Elearning() {
@@ -19,7 +20,7 @@ function Elearning() {
     <Switch>
       <Route exact path={path}>
         <div className="home__page">
-          <Link to={`${path}/testurlid`}>Its a me</Link>
+          <Link to={`${path}/create-course`}>creates new course</Link>
 
           {loading ? <p>Loading...</p> : (
             error ? <p>{console.log(error)}Error...</p> :
@@ -41,11 +42,13 @@ function Elearning() {
             )}
         </div>
       </Route>
-
+      <Route path={`${path}/create-course`}>
+        <CreateCourse />
+      </Route>
       <Route path={`${path}/:courseId`}>
         <Course />
       </Route>
-
+      
     </Switch>
   )
 }
