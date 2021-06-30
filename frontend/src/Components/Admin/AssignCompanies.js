@@ -21,10 +21,11 @@ function AssignCompanies() {
     // This hook will re-render the componenet everytime the "user" collection changes on firebase.
     const firebase = useFirebase();
     const db = firebase.firestore();
-    const [companies, loadingCompanies] = useCollectionData(db.collection('companies'));
+
+
+    const [companies, loadingCompanies] = useCollectionData(db.collection('companies'))
     const [courses, loadingCourses] = useCollectionData(db.collection('courses'));
     
-    //const founders = companies.map((company) => company.creatorID)) TODO
 
     // To keep track of the user and role selected in the drop down menu.
     const [selectedCompany, setSelecteCompany] = useState('');
@@ -77,26 +78,32 @@ function AssignCompanies() {
             return;
         }
 
-        // If the new role selected is the same.
-        if (courses[selectedCourse].courseID in companies[selectedCompany].courses) {
+        // If the company is already enrolled in the course.
+        if (companies[selectedCompany].courses.includes(courses[selectedCourse].courseId)) {
             console.log('This company is already enrolled in ', courses[selectedCourse].title , '! No updates required');
             setInfoAlert(true);
         }
+
         // send request to db to change role
         else {
-            const membersNotInCourse = companies[selectedCompany].members
-                .filter((memberID) => memberID in courses[selectedCourse].students);
 
-            console.log('Enrolling memers of ', companies[selectedCompany].name, 'to course ', selectedCourse.title);
-            Promise.all(
-                //add courses to company (so future members can be easily added to course)
-                db.collection('companies').doc(companies[selectedCompany].companyID).update( {
-                courses: [...companies[selectedCompany].courses, selectedCourse.courseID]
-            }), 
-                //enroll members of company into course
-                db.collection('courses').doc(courses[selectedCourse].courseID).upldate( {
-                students: [...courses[selectedCourse].students, ...membersNotInCourse]
-                }))
+            //finding members of company who are not yet enrolled in course
+            const membersNotInCourse = companies[selectedCompany].members
+                .filter((memberId) => !courses[selectedCourse].students.includes(memberId));
+
+            console.log(membersNotInCourse)
+
+            console.log('Enrolling memers of ', companies[selectedCompany].name, 'to course ', courses[selectedCourse].title);
+        
+            //add courses to company (so future members can be easily added to course)
+            db.collection('companies').doc(companies[selectedCompany].companyId).update({
+            courses: [...companies[selectedCompany].courses, courses[selectedCourse].courseId]
+            })
+            .then(
+            //enroll members of company into course
+            db.collection('courses').doc(courses[selectedCourse].courseId).update({
+            students: [...courses[selectedCourse].students, ...membersNotInCourse]
+            }))
             .then(
                 // on successful change
                 (val) => {
@@ -109,9 +116,6 @@ function AssignCompanies() {
                     setFailAlert(true);
                 }
             );
-
-            
-
             
         }
     }
@@ -131,11 +135,10 @@ function AssignCompanies() {
 
                     {
                         !loadingCompanies ? 
-                        companies.map((company,index) => <MenuItem key={company.id} value={index}> {company.name} : {company.creatorID} </MenuItem>) 
+                        companies.map((company,index) => <MenuItem key={company.id} value={index}> {company.name} </MenuItem>) 
                         : <MenuItem> </MenuItem> }
 
                 </Select>
-                <FormHelperText>The names beside each company are the founders of that company page</FormHelperText>
             </FormControl>
 
             <br></br>
