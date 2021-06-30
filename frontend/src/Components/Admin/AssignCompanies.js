@@ -1,11 +1,9 @@
-import AssignCompanies from "./AssignCompanies"
 import React, { useState } from "react";
 import { useFirebase } from "../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Typography, Button, Select, InputLabel, MenuItem, FormHelperText, FormControl, Snackbar } from "@material-ui/core";
-
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -18,16 +16,20 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function Admin() {
+function AssignCompanies() {
 
     // This hook will re-render the componenet everytime the "user" collection changes on firebase.
     const firebase = useFirebase();
     const db = firebase.firestore();
-    const [users, loading] = useCollectionData(db.collection('users').where('role', '!=', 'admin'));
+
+
+    const [companies, loadingCompanies] = useCollectionData(db.collection('companies'))
+    const [courses, loadingCourses] = useCollectionData(db.collection('courses'));
+    
 
     // To keep track of the user and role selected in the drop down menu.
-    const [selectedUser, setSelectedUser] = useState('');
-    const [selectedRole, setSelectedRole] = useState('');
+    const [selectedCompany, setSelecteCompany] = useState('');
+    const [selectedCourse, setSelectedCourse] = useState('');
     const [successAlert, setSuccessAlert] = useState(false);
     const [failAlert, setFailAlert] = useState(false);
     const [infoAlert, setInfoAlert] = useState(false);
@@ -35,19 +37,20 @@ function Admin() {
     
 
     // Sort the users array. (This must be done here due to limitations of firebase query)
-    if (!loading) {
-        users.sort( (firstEle, secondElement) => {
-            if (firstEle.email < secondElement.email) {
+    if (!loadingCompanies && !loadingCourses) {
+        companies.sort( (firstEle, secondElement) => {
+            if (firstEle.name < secondElement.name) {
                 return -1;
             }
-            else if (firstEle.email > secondElement.email) {
+            else if (firstEle.name > secondElement.name) {
                 return 1;
             }
             else {
                 return 0;
-            }
+            };
         });
     }
+
 
     // When the success alert is closed
     const handleClose = (event, reason, type) => {
@@ -71,21 +74,36 @@ function Admin() {
     // When form is submitted update firebase.
     const handleSubmit = () => {
         // For the case when form is not complete.
-        if ((selectedUser === "") || (selectedRole === "")){
+        if ((selectedCompany === "") || (selectedCourse === "")){
             return;
         }
 
-        // If the new role selected is the same.
-        if (users[selectedUser].role === selectedRole) {
-            console.log('New role for', users[selectedUser].email , 'is the same! No updates required');
+        // If the company is already enrolled in the course.
+        if (companies[selectedCompany].courses.includes(courses[selectedCourse].courseId)) {
+            console.log('This company is already enrolled in ', courses[selectedCourse].title , '! No updates required');
             setInfoAlert(true);
         }
+
         // send request to db to change role
         else {
-            console.log('Changing role of', users[selectedUser].email, 'from', users[selectedUser].role, 'to', selectedRole);
-            db.collection('users').doc(users[selectedUser].uid).update( {
-                role: selectedRole 
+
+            //finding members of company who are not yet enrolled in course
+            const membersNotInCourse = companies[selectedCompany].members
+                .filter((memberId) => !courses[selectedCourse].students.includes(memberId));
+
+            console.log(membersNotInCourse)
+
+            console.log('Enrolling memers of ', companies[selectedCompany].name, 'to course ', courses[selectedCourse].title);
+        
+            //add courses to company (so future members can be easily added to course)
+            db.collection('companies').doc(companies[selectedCompany].companyId).update({
+            courses: [...companies[selectedCompany].courses, courses[selectedCourse].courseId]
             })
+            .then(
+            //enroll members of company into course
+            db.collection('courses').doc(courses[selectedCourse].courseId).update({
+            students: [...courses[selectedCourse].students, ...membersNotInCourse]
+            }))
             .then(
                 // on successful change
                 (val) => {
@@ -104,51 +122,45 @@ function Admin() {
 
     return (
         <div>
-            
-            <Typography variant="h3" color="textPrimary" gutterBottom>
-                Admin Settings
-            </Typography>
-            <br></br>
             <Typography variant="h4" gutterBottom>
-                Assign Roles
+                Assign Courses to Company
             </Typography>
 
             <FormControl className={classes.formControl}>
-                <InputLabel>Select a user</InputLabel>
+                <InputLabel>Select a Company</InputLabel>
                 <Select
                     autoWidth={true}
-                    value={selectedUser}
-                    onChange={(event) => setSelectedUser(event.target.value)}>
+                    value={selectedCompany}
+                    onChange={(event) => setSelecteCompany(event.target.value)}>
 
                     {
-                        !loading ? 
-                        users.map((user,index) => <MenuItem key={user.uid} value={index}> {user.email} : {user.role} </MenuItem>) 
+                        !loadingCompanies ? 
+                        companies.map((company,index) => <MenuItem key={company.id} value={index}> {company.name} </MenuItem>) 
                         : <MenuItem> </MenuItem> }
 
                 </Select>
-                <FormHelperText>The value after the email indicates the user's current role.</FormHelperText>
             </FormControl>
 
             <br></br>
             <FormControl className={classes.formControl}>
-                <InputLabel>Select a Role</InputLabel>
+                <InputLabel>Select a Course</InputLabel>
                 <Select 
                     autoWidth={true} 
-                    value={selectedRole}
-                    onChange={(event) => setSelectedRole(event.target.value)}
+                    value={selectedCourse}
+                    onChange={(event) => setSelectedCourse(event.target.value)}
                     >
-                
-                    <MenuItem value="inaccessible"> Inaccessible </MenuItem>
-                    <MenuItem value="mod"> Moderator </MenuItem>
+                    {
+                        !loadingCourses ? 
+                        courses.map((course,index) => <MenuItem key={course.id} value={index}> {course.title} : {course.description} </MenuItem>) 
+                        : <MenuItem> </MenuItem> }
                 
                 </Select>
-                <FormHelperText>Moderators have extra privileges in the community section.</FormHelperText>
                 <br></br>
 
             </FormControl>
             <br></br>
             <Button variant="contained" color="primary" onClick={handleSubmit}>
-                Submit
+                Enroll
             </Button>
 
             <Snackbar open={successAlert} autoHideDuration={1000} onClose={(event, reason) => handleClose(event, reason, 0)}>
@@ -165,15 +177,13 @@ function Admin() {
 
             <Snackbar open={infoAlert} autoHideDuration={1000} onClose={(event, reason) => handleClose(event, reason, 2)}>
                 <Alert onClose={(event, reason) => handleClose(event, reason, 2)} severity="info">
-                    The user selected already has that role!
+                    The company selected is already enrolled in this course!
                 </Alert>
             </Snackbar>
-            <br></br>
-            <br></br>
-            <AssignCompanies/>
+           
         </div>
     );
 
 }
 
-export default Admin;
+export default AssignCompanies;
