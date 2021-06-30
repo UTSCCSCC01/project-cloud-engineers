@@ -1,4 +1,4 @@
-import { AssignCompanies } from "./AssignCompanies"
+import AssignCompanies from "./AssignCompanies"
 import React, { useState } from "react";
 import { useFirebase } from "../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
