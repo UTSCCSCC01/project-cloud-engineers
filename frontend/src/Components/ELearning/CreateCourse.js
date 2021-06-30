@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { nanoid } from 'nanoid'
-import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
 import { useHistory } from "react-router";
-
 import { useFirebase } from '../Utils/Firebase';
 
 function CreateCourse(props) {
