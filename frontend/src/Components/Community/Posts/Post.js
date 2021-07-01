@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import '../../../Styles/Post.css'
 import Avatar from '@material-ui/core/Avatar';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
