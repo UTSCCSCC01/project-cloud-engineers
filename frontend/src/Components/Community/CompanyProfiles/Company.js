@@ -2,8 +2,8 @@ import React from 'react'
 import '../../../Styles/Company.css'
 import EditIcon from '@material-ui/icons/Edit';
 
-function Company({name, mission, members}) {
-
+// Company Info Box.
+function Company({name, mission}) {
     return (
         <div className="company">
 
@@ -15,15 +15,6 @@ function Company({name, mission, members}) {
                 <h2>Mission</h2>
                 <h3>{mission}</h3>
             </div>
-
-            <div className="company__content">
-                <h2>Members</h2>
-                <ul>
-                    {/* Mapping function to display members  */}
-                </ul>
-            </div>
-
-        
 
             <div className="company__actions">
                 <EditIcon className="company__editbtn"/>
