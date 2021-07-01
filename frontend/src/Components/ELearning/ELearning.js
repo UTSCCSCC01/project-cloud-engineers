@@ -55,7 +55,6 @@ function Elearning() {
       <Route path={`${path}/:courseId`}>
         <Course />
       </Route>
-
     </Switch>
   )
 }
