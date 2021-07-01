@@ -2,6 +2,7 @@ import React from 'react'
 import '../../../Styles/Company.css'
 import EditIcon from '@material-ui/icons/Edit';
 
+// Company Info Box.
 function Company({name, mission}) {
     return (
         <div className="company">

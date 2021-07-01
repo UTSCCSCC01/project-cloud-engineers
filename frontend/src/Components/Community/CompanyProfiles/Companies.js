@@ -6,8 +6,10 @@ import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 import { nanoid } from 'nanoid';
 
+// Pop-up form for adding a company
 function AddCompany({onClose, open}) {
 
+    // To keep track of the values the user entered.
     const [company, setCompany] = useState('');
     const [mission, setMission] = useState('');
 
@@ -67,7 +69,8 @@ function Companies() {
     const [company, loading] = useCollectionData(db.collection('companies').where('members', 'array-contains-any', [userID]));
 
     const [open, setOpen] = useState(false);
-
+    
+    // Handler for the submitting the form.
     const handleClose = (company, mission, flag) => {
         console.log(company, mission, flag)
         setOpen(false);
