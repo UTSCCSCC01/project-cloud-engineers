@@ -70,8 +70,7 @@ function CreateAssignment(props) {
         });
     }
 
-    function fileDelete(e) {
-        console.log(e.target.id);
+    function fileDelete(e) {        
         setFiles(old => {
             return Array.from(old).filter(fileObj => fileObj.name !== e.target.id);
         })
