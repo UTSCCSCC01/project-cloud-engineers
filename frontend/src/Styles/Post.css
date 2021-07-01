@@ -33,13 +33,20 @@ h3{
     padding: 8px;
 }
 
+
 .post__timestamp{
     color: gray;
     margin-left: 5px;
     font-size: x-small;
 }
 
-.post__likebtn:hover, .post__commentbtn:hover{
+.post__deletebtn {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.post__likebtn:hover, .post__commentbtn:hover, .post__deletebtn:hover {
     cursor: pointer;
     color: blue;
 }
