@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams } from 'react-router-dom';
-
+import { nanoid } from 'nanoid';
 import { useFirebase } from '../../Utils/Firebase';
 
 
 function CreateAssignment(props) {
     let { courseId } = useParams();
     let date = new Date();
-    
+    let user = JSON.parse(localStorage.getItem("user"));
     const [files, setFiles] = useState([]);
-    let [formData, setFormData] = useState({ title: '', description: '', duedate: date.toISOString() , expiry: date.toISOString()});
+    let [formData, setFormData] = useState({ title: '', description: '', duedate: date.toISOString().slice(0, -1), expiry: date.toISOString().slice(0, -1) });
     const fileInput = useRef();
 
     let firebase = useFirebase();
@@ -28,19 +28,43 @@ function CreateAssignment(props) {
         });
     }
 
-    let handleSubmit = (e) => {
+    async function uploadFile(fileObj) {
+        let fileId = nanoid();
+        let fileRef = firebase.storage().ref().child(fileId);
+        await fileRef.put(fileObj);
+        let Url = await fileRef.getDownloadURL();
+        console.log(fileRef);
+        await firebase.firestore().collection('files').doc(fileId).set({
+            fileId: fileId,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            uploaderId: user.userID,
+            url: Url,
+            // privacy: pri,
+        });
+        return fileId;
+    }
+
+    let handleSubmit =  async (e) => {
         e.preventDefault();
-        // Array.from(files).map(file => addImage(file, privacy));
-        console.log(formData);
-        console.log(files);
+        // first we deal with the files, list of promises that will resolve to list of fileIds
+        let fileIds = await Promise.all(files.map(file => uploadFile(file)));
+        // then we add the assignment with the file ids
+        let assId = nanoid();
+        await firebase.firestore().collection('assignments').doc(assId).set({
+            ...formData,
+            assignmentId: assId,
+            uploaderId: user.userID,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            files: fileIds
+        });
 
         setFiles([]);
-        setFormData({ title: '', description: '', duedate: date.toLocaleTimeString() , expiry: date.toLocaleTimeString() });
+        setFormData({ title: '', description: '', duedate: date.toISOString().slice(0, -1), expiry: date.toISOString().slice(0, -1) });
     }
 
     function fileChange(e) {
         setFiles(old => {
-            return([...old, e.target.files[0]])
+            return ([...old, e.target.files[0]])
         });
     }
 
@@ -54,17 +78,17 @@ function CreateAssignment(props) {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="title" required/>
+                <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="title" required />
                 <input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="descrip" required />
                 <br /> assignment due date <br />
-                <input  type="datetime-local" name="duedate" value={formData.duedate} onChange={handleChange} placeholder="Enter an email" required/>
+                <input type="datetime-local" name="duedate" value={formData.duedate} onChange={handleChange} placeholder="Enter an email" required />
                 <br /> assignment expiry date <br />
-                <input  type="datetime-local" name="expiry" value={formData.expiry} onChange={handleChange} placeholder="Enter an email" required/>
+                <input type="datetime-local" name="expiry" value={formData.expiry} onChange={handleChange} placeholder="Enter an email" required />
                 <br />
-                <input ref={fileInput} onChange={fileChange} name="attachments" type="file"/>
+                <input ref={fileInput} onChange={fileChange} name="attachments" type="file" />
                 <div>
                     <ul>
-                        { Array.from(files).map(file => {
+                        {Array.from(files).map(file => {
                             return (
                                 <li>{file.name} <a id={file.name} href='#' onClick={fileDelete}>remove file</a></li>
                             )
