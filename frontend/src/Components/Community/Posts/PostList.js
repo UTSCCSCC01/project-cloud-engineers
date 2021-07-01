@@ -110,6 +110,9 @@ function PostList() {
         <div className="postList">
             
             <div className= "postList__creation">
+                <div className="post__creation__avatar">
+                    <Avatar className="avatar">{user.username.charAt(0).toUpperCase()}</Avatar>
+                </div>
                 <form>
                     <div className="postList__form">                    
                             <FormControl>
@@ -120,7 +123,7 @@ function PostList() {
                     
                     <div className="postList__media">
                         <input className="filebtn" type="file" onChange={handleChange} />
-                        <Button disabled={!caption} color="primary" className="mediabtn" onClick={handleUpload}> <AddPhotoAlternateIcon/> Add Media</Button>
+                        <Button disabled={!caption || !image} color="primary" className="mediabtn" onClick={handleUpload}> <AddPhotoAlternateIcon/> UPLOAD MEDIA</Button>
                     </div>
 
                     <div className="postList__btn">

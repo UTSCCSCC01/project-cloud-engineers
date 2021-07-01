@@ -21,7 +21,7 @@ function Post({content, username, timestamp, media}) {
             </div>
 
             <div className="post__img">
-                {media? <img width="500px" height="250px" src={media}/>:console.log('no images')}
+                {media? <img width="500px" height="350px" src={media}/>:console.log('no images')}
             </div>
 
             <div className="post__actions">
