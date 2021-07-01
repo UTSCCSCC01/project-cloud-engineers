@@ -7,8 +7,6 @@ import { useFirebase } from "../../Utils/Firebase";
 import { nanoid } from 'nanoid'
 import Avatar from '@material-ui/core/Avatar';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import { useCollectionData } from "react-firebase-hooks/firestore";
-
 
 function PostList() {
     
@@ -23,7 +21,6 @@ function PostList() {
     
     // Need to call setPosts whenever someone deletes a post
     const [posts, setposts] = useState([]);
-    
     const [comments, setcomments] = useState([]);
     const [newID, setnewID] = useState(nanoid())
     
@@ -167,6 +164,7 @@ function PostList() {
                         role={user.role}
                         timestamp={post.timestamp}
                         media={post.media}
+                        postId={post.postId} 
                         deleteCallBack={deletePost(post.postId)}
                     />
                 ))}                
