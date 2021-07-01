@@ -3,9 +3,11 @@ import '../../../Styles/Post.css'
 import Avatar from '@material-ui/core/Avatar';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-function Post({content, username, timestamp, media}) {
- 
+
+function Post({content, username, role, timestamp, media, deleteCallBack}) {
+
     return (
         <div className="post">
             <div className="post__top">
@@ -14,14 +16,24 @@ function Post({content, username, timestamp, media}) {
                     {username}
                     <span className="post__timestamp">  timestamp</span>
                 </h3>
+                
+                {/* Only show the delete option to moderators and admins */}
+                {
+                    role != "inaccessible" ? 
+                    <div className="post__deletebtn" onClick={deleteCallBack}>
+                        <DeleteIcon/>
+                    </div> 
+                    : 
+                    <></> 
+                }
+                
             </div>
-            {console.log("Got this media:", media)}
             <div className="post__content">
                 <h1>{content}</h1>
             </div>
 
             <div className="post__img">
-                {media? <img width="500px" height="350px" src={media}/>:console.log('no images')}
+                {media ? <img width="500px" height="350px" src={media}/>:<></>}
             </div>
 
             <div className="post__actions">

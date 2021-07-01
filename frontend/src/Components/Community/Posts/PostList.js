@@ -20,7 +20,10 @@ function PostList() {
     const [image, setImage] = useState(null);
     const [url, setUrl] = useState("");
     const [progress, setProgress] = useState(0);
+    
+    // Need to call setPosts whenever someone deletes a post
     const [posts, setposts] = useState([]);
+    
     const [comments, setcomments] = useState([]);
     const [newID, setnewID] = useState(nanoid())
     
@@ -104,6 +107,29 @@ function PostList() {
         setcaption('');
         setImage(null);
         setUrl('');
+
+    }
+
+    function deletePost(postId) {
+        function deleteCallBack() {
+            console.log("Deleting", postId);
+            // Call fire base to delete the post
+            db.collection('posts').doc(postId).delete()
+            .then(
+                // on successful change
+                (val) => {
+                    console.log('Delete Succesful!', val);
+                    setposts( posts.filter( (value) => {
+                        return value.postId !== postId;
+                    }));
+                },
+                // on non-sucessful change
+                (err) => {
+                    console.log('Error, could not delete!', err);
+                }
+            );
+        }
+        return deleteCallBack;
     }
 
     return (
@@ -134,11 +160,14 @@ function PostList() {
             
             <div className="postList__posts">
                 {posts.map(post => (
-                    <Post 
+                    <Post
+                        key={post.postId}
                         content={post.content}
                         username={post.authorName}
+                        role={user.role}
                         timestamp={post.timestamp}
                         media={post.media}
+                        deleteCallBack={deletePost(post.postId)}
                     />
                 ))}                
             </div>
