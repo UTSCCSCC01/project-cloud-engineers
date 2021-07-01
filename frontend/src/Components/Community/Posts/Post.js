@@ -1,11 +1,14 @@
-import React from 'react'
+import React, {useState} from 'react'
 import '../../../Styles/Post.css'
 import Avatar from '@material-ui/core/Avatar';
 import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
+import CommentList from './CommentList';
 
-function Post({content, username, timestamp, media}) {
- 
+function Post({content, username, timestamp, media, postId}) {
+    
+    const [commentView, setcommentView] = useState(false);
+
     return (
         <div className="post">
             <div className="post__top">
@@ -26,9 +29,12 @@ function Post({content, username, timestamp, media}) {
 
             <div className="post__actions">
                 <ThumbUpAltIcon className="post__likebtn"/>
-                <ChatBubbleIcon className="post__commentbtn"/>
+                <ChatBubbleIcon onClick={() => setcommentView(!commentView)} className="post__commentbtn"/>
             </div>
-            
+
+            <div className="post__comments">
+              {commentView ? <CommentList postID={postId}/> : null}  
+            </div>
         </div>
     )
 }

@@ -7,8 +7,6 @@ import { useFirebase } from "../../Utils/Firebase";
 import { nanoid } from 'nanoid'
 import Avatar from '@material-ui/core/Avatar';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import { useCollectionData } from "react-firebase-hooks/firestore";
-
 
 function PostList() {
     
@@ -21,7 +19,6 @@ function PostList() {
     const [url, setUrl] = useState("");
     const [progress, setProgress] = useState(0);
     const [posts, setposts] = useState([]);
-    const [comments, setcomments] = useState([]);
     const [newID, setnewID] = useState(nanoid())
     
     const handleChange = e => {
@@ -139,6 +136,7 @@ function PostList() {
                         username={post.authorName}
                         timestamp={post.timestamp}
                         media={post.media}
+                        postId={post.postId} 
                     />
                 ))}                
             </div>
