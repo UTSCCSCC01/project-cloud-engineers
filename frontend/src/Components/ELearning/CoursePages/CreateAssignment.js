@@ -33,12 +33,13 @@ function CreateAssignment(props) {
         let fileRef = firebase.storage().ref().child(fileId);
         await fileRef.put(fileObj);
         let Url = await fileRef.getDownloadURL();
-        console.log(fileRef);
         await firebase.firestore().collection('files').doc(fileId).set({
             fileId: fileId,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             uploaderId: user.userID,
             url: Url,
+            name: fileObj.name,
+            type: fileObj.type
             // privacy: pri,
         });
         return fileId;
@@ -53,7 +54,8 @@ function CreateAssignment(props) {
         await firebase.firestore().collection('assignments').doc(assId).set({
             ...formData,
             assignmentId: assId,
-            uploaderId: user.userID,
+            courseId: courseId,
+            creatorId: user.userID,
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             files: fileIds
         });
