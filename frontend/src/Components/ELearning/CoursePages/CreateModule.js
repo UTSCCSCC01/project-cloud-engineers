@@ -90,7 +90,7 @@ function CreateAssignment(props) {
                     {modItems.map((item) => {
                         return (
                             <li id={item.id}>
-                                {item.title} -- {item.type} 
+                                {item.title} -- {item.type} --
                                 <a href="#" id={item.id} data-title={item.title} data-type={item.type} onClick={handleDelete}>delete from module</a>
                             </li>
                         )
@@ -107,7 +107,7 @@ function CreateAssignment(props) {
                     }).map((item) => {
                         return (
                             <li id={item.id}>
-                                {item.title} -- {item.type} 
+                                {item.title} -- {item.type} --
                                 <a href="#" id={item.id} data-title={item.title} data-type={item.type}  onClick={handleAdd}>add to module</a>
                             </li>
                         )
