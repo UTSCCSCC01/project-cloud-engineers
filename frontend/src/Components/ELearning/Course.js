@@ -7,6 +7,7 @@ import Modules from './CoursePages/Modules';
 import Assignments from './CoursePages/Assignments';
 import CreateAssignment from './CoursePages/CreateAssignment';
 import CreateLesson from './CoursePages/CreateLesson';
+import CreateModule from './CoursePages/CreateModule';
 
 function Course(props) {
     let { courseId } = useParams();
@@ -38,6 +39,8 @@ function Course(props) {
                         <Link to={`${courseId}/create-assignment`}>Create New Assignment</Link>
                         <br />
                         <Link to={`${courseId}/create-lesson`}>Create New Lesson</Link>
+                        <br />
+                        <Link to={`${courseId}/create-module`}>Create Module</Link>
                     </div> : 
                     <p>you are not instructor so you only see the options above</p>
                     }
@@ -55,6 +58,9 @@ function Course(props) {
             </Route>
             <Route path={`${path}/create-lesson`}>
                 <CreateLesson />
+            </Route>
+            <Route path={`${path}/create-module`}>
+                <CreateModule />
             </Route>
 
         </Switch>
