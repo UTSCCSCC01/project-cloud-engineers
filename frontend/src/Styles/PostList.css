@@ -44,3 +44,8 @@
 .mediabtn:hover{
     color: green;
 }
+
+.post__creation__avatar{
+    display: flex;
+    justify-content: center;
+}
