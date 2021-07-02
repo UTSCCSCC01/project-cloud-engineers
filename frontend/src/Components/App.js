@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Switch, Route, Link, useHistory, useLocation } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { Switch, Route, Link, useHistory } from 'react-router-dom';
 import { useAuth, PrivateRoute } from './Utils/Auth';
 
 import Register from './External/Register';

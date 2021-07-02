@@ -57,11 +57,14 @@ function Admin() {
         
         switch (type) {
             case 0:
-                setSuccessAlert(false);                
+                setSuccessAlert(false);      
+                break;          
             case 1:
                 setFailAlert(false);
+                break;
             case 2:
                 setInfoAlert(false);
+                break;
             default:
                 break;
         }
