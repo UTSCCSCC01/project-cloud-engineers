@@ -60,12 +60,12 @@ function AddCompany({onClose, open}) {
     return (
         <Dialog open={open} onClose={() => onClose(company, mission, false)} aria-labelledby="form-dialog-title">
 
-            <DialogTitle id="form-dialog-title">Create a new company</DialogTitle>
+            <DialogTitle id="form-dialog-title">Add new company</DialogTitle>
 
             <DialogContent>
 
                 <DialogContentText>
-                    Fill out the information below to create a new company.
+                    Fill out the information below to create new company.
                 </DialogContentText>
 
                 <TextField
@@ -104,6 +104,61 @@ function AddCompany({onClose, open}) {
     )
 }
 
+// Pop-up form for editing a company
+function EditCompany({onClose, open, initialCompany, initialMission}) {
+
+    // To keep track of the values the user entered.
+    const [company, setCompany] = useState(initialCompany);
+    const [mission, setMission] = useState(initialMission);
+
+    return (
+        <Dialog open={open} onClose={() => onClose(company, mission, false)} aria-labelledby="form-dialog-title">
+
+            <DialogTitle id="form-dialog-title">Edit Company Info</DialogTitle>
+
+            <DialogContent>
+
+                <DialogContentText>
+                    Fill out the information below to edit company company.
+                </DialogContentText>
+
+                <TextField
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Company Name"
+                    fullWidth
+                />
+
+                <TextField
+                    value={mission}
+                    onChange={ (e) => setMission(e.target.value) }
+                    autoFocus
+                    margin="dense"
+                    id="mission"
+                    label="Mission Statement"
+                    fullWidth
+                />
+
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={() => onClose(company, mission, false)} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={ () => onClose(company, mission, true)} color="primary">
+                    Apply
+                </Button>
+            </DialogActions>
+
+        </Dialog>
+
+    )
+}
+
+
 
 function Companies() {
     // This hook will re-render the componenet everytime the "user" collection changes on firebase.
@@ -114,7 +169,8 @@ function Companies() {
 
     const [addOpen, setAddOpen] = useState(false);
     const [joinOpen, setJoinOpen] = useState(false);
-
+    const [editOpen, setEditOpen] = useState(false);
+    
     // Handler for the submitting the form.
     const handleAddClose = (company, mission, flag) => {
         console.log(company, mission, flag)
@@ -146,6 +202,48 @@ function Companies() {
             console.log("Could not add", company, ":", val)
         });
         
+    }
+
+    // Handler when editing current field
+    const handleEditClose = (newCompany, newMission, flag) => {
+        console.log(newCompany, newMission, flag);
+        setEditOpen(false);
+        // If the flag is false then user just clicked cancel
+        if (!flag) return;
+
+        // Check if the data is given is valid
+        if ((newCompany.length === 0) || (newMission.length === 0)) return;
+
+        // Update company name if it's new
+        if (newCompany !== company[0].name) {
+            db.collection('companies').doc(company[0].companyId).update( {
+                name: newCompany 
+            })
+            // On success
+            .then((val) => {
+                console.log("Updated new company name:", newCompany, "to firebase!")
+            })
+            // On Error
+            .catch((val) => {
+                console.log("Could not update new company name", newCompany, ":", val)
+            });
+        }
+
+        // Update mission if it's new
+        if (newMission !== company[0].mission) {
+            db.collection('companies').doc(company[0].companyId).update( {
+                mission: newMission 
+            })
+            // On success
+            .then((val) => {
+                console.log("Updated new mission :", newMission, "to firebase!")
+            })
+            // On Error
+            .catch((val) => {
+                console.log("Could not update new mission", newMission, ":", val)
+            });
+        }
+
     }
 
     const handleJoinClose = (companyId, flag) => {
@@ -192,23 +290,25 @@ function Companies() {
             to create a new company */}
             { 
             company.length !== 0 ?
-                <Company name={company[0].name} mission={company[0].mission}/> 
+                <>
+                    <Company name={company[0].name} mission={company[0].mission} editCallback={setEditOpen}/>
+                    {/* Pop up form to edit company. */}
+                    <EditCompany open={editOpen} onClose={handleEditClose} initialCompany={company[0].name} initialMission={company[0].mission}/>
+                    {/* Pop up form to join another company. */}
+                    <JoinCompany open={joinOpen} onClose={handleJoinClose} userId={userID} update={company[0].name} db={db}/>
+                    <br/>
+                    <Button variant="contained" onClick={() => setJoinOpen(true)}>Join another company</Button>
+                </>
             :
                 <>
                     <h3>You are not apart of any company!</h3>
                     <Button variant="contained" onClick={() => setAddOpen(true)}>Add a company</Button>
+                    {/* Pop up form to create a new company. */}
+                    <AddCompany open={addOpen} onClose={handleAddClose}/>
                 </>
             }
-            
-            {/* Pop up form to create a new company. */}
-            <AddCompany open={addOpen} onClose={handleAddClose}/>
-            
-            <br/>
-            <Button variant="contained" onClick={() => setJoinOpen(true)}>Join another company</Button>
-
-            {/* Pop up form to join another company. */}
-            <JoinCompany open={joinOpen} onClose={handleJoinClose} userId={userID} update={company} db={db}/>
-
+        
+        
         </div>
     );
 }

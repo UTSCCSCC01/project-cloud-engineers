@@ -3,7 +3,7 @@ import '../../../Styles/Company.css'
 import EditIcon from '@material-ui/icons/Edit';
 
 // Company Info Box.
-function Company({name, mission}) {
+function Company({name, mission, editCallback}) {
     return (
         <div className="company">
 
@@ -17,10 +17,8 @@ function Company({name, mission}) {
             </div>
 
             <div className="company__actions">
-                <EditIcon className="company__editbtn"/>
+                <EditIcon onClick={() => editCallback(true)} className="company__editbtn" />
             </div>
-            
-            
         </div>
     )
 }
