@@ -8,9 +8,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 function Post({content, username, role, timestamp, media, postId,deleteCallBack}) {
     
+    //Used to render comments when user clicks the commnent icon.
     const [commentView, setcommentView] = useState(false);
+
     return (
         <div className="post">
+            
+            {/* Part of post that contains caption and media */}
             <div className="post__top">
                 <Avatar className="avatar">{username.charAt(0).toUpperCase()}</Avatar>
                 <h3>
@@ -29,6 +33,7 @@ function Post({content, username, role, timestamp, media, postId,deleteCallBack}
                 }
                 
             </div>
+
             <div className="post__content">
                 <h1>{content}</h1>
             </div>
