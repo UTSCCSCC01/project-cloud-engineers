@@ -24,17 +24,21 @@ function PostList() {
     const [comments, setcomments] = useState([]);
     const [newID, setnewID] = useState(nanoid())
     
+    //Handles changes made to the media input textbox for posts.
     const handleChange = e => {
         if (e.target.files[0]) {
           setImage(e.target.files[0]);
         }
     };
 
+    //Handles changes made to the media input textbox for posts.
     const handleCaptionChange = e => {
         setcaption(e.target.value);
         setnewID(nanoid());
     }
     
+    //Uploads media(images for now) to the firebase storage platform.
+    //Assigns url for image to the corresponding post document.
     const handleUpload = () => {
         const uploadTask = firebase.storage().ref('media/posts/'+newID+'/' + image.name).put(image);
         uploadTask.on(
@@ -61,27 +65,17 @@ function PostList() {
           );
     }
 
+    //Gets all post information whenever user enters the posts page.
     useEffect(() => {
         db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => (
             setposts(snapshot.docs.map((doc) => doc.data()))
         ))
     }, [])
 
+    //Adds posts and it's corresponding information to the firestore database.
     function addPost(event){
 
         event.preventDefault();
-        
-        const post = {
-            content: caption,
-            authorId: user.userID,
-            authorName: user.username,
-            likes: 0,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            privacy: 'public',
-            attachments:[],
-            postId: newID,
-            media: url,
-        }
         
         db.collection('posts').doc(newID).set({
             content: caption,
@@ -132,10 +126,13 @@ function PostList() {
     return (
         <div className="postList">
             
+            {/*Post Creation mechanism*/}
             <div className= "postList__creation">
+                
                 <div className="post__creation__avatar">
                     <Avatar className="avatar">{user.username.charAt(0).toUpperCase()}</Avatar>
                 </div>
+                
                 <form>
                     <div className="postList__form">                    
                             <FormControl>
@@ -146,15 +143,32 @@ function PostList() {
                     
                     <div className="postList__media">
                         <input className="filebtn" type="file" onChange={handleChange} />
-                        <Button disabled={!caption || !image} color="primary" className="mediabtn" onClick={handleUpload}> <AddPhotoAlternateIcon/> UPLOAD MEDIA</Button>
+                        <Button 
+                                disabled={!caption || !image} 
+                                color="primary" className="mediabtn" 
+                                onClick={handleUpload}
+                        > 
+                            <AddPhotoAlternateIcon/> 
+                            UPLOAD MEDIA
+                        </Button>
                     </div>
 
                     <div className="postList__btn">
-                        <Button onClick={addPost} disabled={!caption} type='submit' variant="contained" color="primary">Create Post</Button>
+                        <Button 
+                            onClick={addPost} 
+                            disabled={!caption} 
+                            type='submit' 
+                            variant="contained" 
+                            color="primary"
+                        >
+                            Create Post
+                        </Button>
                     </div>
                 </form>
+
             </div>
             
+            {/* List of all posts */}
             <div className="postList__posts">
                 {posts.map(post => (
                     <Post
