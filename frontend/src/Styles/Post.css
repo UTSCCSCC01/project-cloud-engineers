@@ -24,6 +24,12 @@ h3{
     border: 2px solid blue;
 }
 
+.post__edit{
+    resize: none;
+    width: 480px;
+    margin: 0 0 0.25rem 1rem;
+}
+
 .post__actions{
     display: flex;
     justify-content: space-between;

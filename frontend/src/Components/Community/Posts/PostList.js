@@ -4,66 +4,8 @@ import Post from './Post';
 import '../../../Styles/PostList.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { nanoid } from 'nanoid'
-import Avatar from '@material-ui/core/Avatar';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
-
-// Pop-up form for editing a company
-function EditCompany({onClose, open, initialCompany, initialMission}) {
-
-    // To keep track of the values the user entered.
-    const [company, setCompany] = useState(initialCompany);
-    const [mission, setMission] = useState(initialMission);
-
-    return (
-        <Dialog open={open} onClose={() => onClose(company, mission, false)} aria-labelledby="form-dialog-title">
-
-            <DialogTitle id="form-dialog-title">Edit Company Info</DialogTitle>
-
-            <DialogContent>
-
-                <DialogContentText>
-                    Fill out the information below to edit company company.
-                </DialogContentText>
-
-                <TextField
-                    value={company}
-                    onChange={(e) => setCompany(e.target.value)}
-                    autoFocus
-                    margin="dense"
-                    id="name"
-                    label="Company Name"
-                    fullWidth
-                />
-
-                <TextField
-                    value={mission}
-                    onChange={ (e) => setMission(e.target.value) }
-                    autoFocus
-                    margin="dense"
-                    id="mission"
-                    label="Mission Statement"
-                    fullWidth
-                />
-
-            </DialogContent>
-
-            <DialogActions>
-                <Button onClick={() => onClose(company, mission, false)} color="primary">
-                    Cancel
-                </Button>
-                <Button onClick={ () => onClose(company, mission, true)} color="primary">
-                    Apply
-                </Button>
-            </DialogActions>
-
-        </Dialog>
-
-    )
-}
-
-
-
+import { Avatar, Button} from "@material-ui/core";
 
 function PostList() {
     
@@ -180,6 +122,27 @@ function PostList() {
         return deleteCallBack;
     }
 
+    function editPost(postId) {
+        function editCallBack(content) {
+            console.log("Editing", postId);
+            // Call fire base to update the post
+            db.collection('posts').doc(postId).update({
+                content: content
+            })
+            .then(
+                // on successful change
+                (val) => {
+                    console.log('Update Succesful!', val);
+                },
+                // on non-sucessful change
+                (err) => {
+                    console.log('Error, could not update!', err);
+                }
+            );
+        }
+        return editCallBack;
+    }
+
     return (
         <div className="postList">
             
@@ -236,11 +199,12 @@ function PostList() {
                         timestamp={post.timestamp}
                         media={post.media}
                         postId={post.postId} 
+                        editCallBack={editPost(post.postId)}
                         deleteCallBack={deletePost(post.postId)}
                     />
                 ))}                
             </div>
-
+            
         </div>
     )
 }

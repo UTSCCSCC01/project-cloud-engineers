@@ -7,10 +7,19 @@ import CommentList from './CommentList';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 
-function Post({content, username, role, timestamp, media, postId,deleteCallBack}) {
+function Post({content, username, role, timestamp, media, postId,deleteCallBack, editCallBack}) {
     
     //Used to render comments when user clicks the commnent icon.
     const [commentView, setcommentView] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [newContent, setNewContent] = useState(content)
+
+    const handleEdit = (e) => {
+        e.preventDefault();
+        console.log(newContent);
+        editCallBack(newContent);
+        setEdit(false);
+    }
 
     return (
         <div className="post">
@@ -28,7 +37,7 @@ function Post({content, username, role, timestamp, media, postId,deleteCallBack}
                     role != "inaccessible" ? 
                     <div className="post__adminbtns">
                         
-                        <div className="post__editbtn">
+                        <div className="post__editbtn" onClick={() => setEdit(!edit)}>
                             <EditIcon/>
                         </div>
                         
@@ -45,6 +54,18 @@ function Post({content, username, role, timestamp, media, postId,deleteCallBack}
             <div className="post__content">
                 <h1>{content}</h1>
             </div>
+            
+            {/* Only show edit box when edit button is clicked */}
+            {edit ?
+                <form onSubmit={handleEdit}>
+                    <textarea className="post__edit"  name="comment" form="usrform" value={newContent} onChange={(e) => setNewContent(e.target.value)}>
+                        
+                    </textarea>
+                    <input type="submit" value="Submit" />
+                </form>
+            :
+                <></>
+            }
 
             <div className="post__img">
                 {media ? <img width="500px" height="350px" src={media}/>:<></>}
