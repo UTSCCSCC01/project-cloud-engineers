@@ -5,6 +5,7 @@ import ThumbUpAltIcon from '@material-ui/icons/ThumbUpAlt';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 import CommentList from './CommentList';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 
 function Post({content, username, role, timestamp, media, postId,deleteCallBack}) {
     
@@ -25,8 +26,15 @@ function Post({content, username, role, timestamp, media, postId,deleteCallBack}
                 {/* Only show the delete option to moderators and admins */}
                 {
                     role != "inaccessible" ? 
-                    <div className="post__deletebtn" onClick={deleteCallBack}>
-                        <DeleteIcon/>
+                    <div className="post__adminbtns">
+                        
+                        <div className="post__editbtn">
+                            <EditIcon/>
+                        </div>
+                        
+                        <div className="post__deletebtn" onClick={deleteCallBack}>
+                            <DeleteIcon/>
+                        </div>
                     </div> 
                     : 
                     <></> 

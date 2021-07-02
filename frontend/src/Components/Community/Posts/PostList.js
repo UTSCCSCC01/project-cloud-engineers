@@ -1,12 +1,69 @@
 import React, {useState, useEffect} from 'react'
 import { FormControl,Input,InputLabel } from '@material-ui/core'
-import Button from '@material-ui/core/Button';
 import Post from './Post';
 import '../../../Styles/PostList.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { nanoid } from 'nanoid'
 import Avatar from '@material-ui/core/Avatar';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
+
+// Pop-up form for editing a company
+function EditCompany({onClose, open, initialCompany, initialMission}) {
+
+    // To keep track of the values the user entered.
+    const [company, setCompany] = useState(initialCompany);
+    const [mission, setMission] = useState(initialMission);
+
+    return (
+        <Dialog open={open} onClose={() => onClose(company, mission, false)} aria-labelledby="form-dialog-title">
+
+            <DialogTitle id="form-dialog-title">Edit Company Info</DialogTitle>
+
+            <DialogContent>
+
+                <DialogContentText>
+                    Fill out the information below to edit company company.
+                </DialogContentText>
+
+                <TextField
+                    value={company}
+                    onChange={(e) => setCompany(e.target.value)}
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Company Name"
+                    fullWidth
+                />
+
+                <TextField
+                    value={mission}
+                    onChange={ (e) => setMission(e.target.value) }
+                    autoFocus
+                    margin="dense"
+                    id="mission"
+                    label="Mission Statement"
+                    fullWidth
+                />
+
+            </DialogContent>
+
+            <DialogActions>
+                <Button onClick={() => onClose(company, mission, false)} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={ () => onClose(company, mission, true)} color="primary">
+                    Apply
+                </Button>
+            </DialogActions>
+
+        </Dialog>
+
+    )
+}
+
+
+
 
 function PostList() {
     
