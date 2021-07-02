@@ -1,10 +1,54 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Company from './Company';
 import '../../../Styles/Companies.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, List, ListItemText} from "@material-ui/core";
 import { nanoid } from 'nanoid';
+
+function JoinCompany({onClose, open, userId, update, db}) {
+    
+    const [companies, setCompanies] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            let newCompanies = [];
+            await db.collection('companies').get().then( querySnapshot => {
+                querySnapshot.docs.map( doc => {
+                    if (!doc.data().members.includes(userId)) {
+                        newCompanies.push(doc.data())
+                    }
+                })
+                setCompanies(newCompanies);
+            })
+        }
+        fetchData(); 
+    }, [update]);
+
+    return (
+        <Dialog onClose={() => onClose('', false)} aria-labelledby="simple-dialog-title" open={open}>
+            <DialogTitle id="simple-dialog-title">Join a company</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Select the company you want to join.
+                </DialogContentText>
+            </DialogContent>
+            <List>
+                {companies.map((company) => (
+                    <ListItem button onClick={() => onClose(company.companyId, true)} key={company.companyId}>
+                        <ListItemText primary={`${company.name} (${company.companyId})`} />
+                    </ListItem>
+                ))}
+            </List>
+            <DialogActions>
+                <Button onClick={() => onClose('', false)} color="primary">
+                    Cancel
+                </Button>
+            </DialogActions>
+      </Dialog>
+    );
+}
+
 
 // Pop-up form for adding a company
 function AddCompany({onClose, open}) {
@@ -68,17 +112,18 @@ function Companies() {
     const userID = JSON.parse(localStorage.user).userID;
     const [company, loading] = useCollectionData(db.collection('companies').where('members', 'array-contains-any', [userID]));
 
-    const [open, setOpen] = useState(false);
-    
+    const [addOpen, setAddOpen] = useState(false);
+    const [joinOpen, setJoinOpen] = useState(false);
+
     // Handler for the submitting the form.
-    const handleClose = (company, mission, flag) => {
+    const handleAddClose = (company, mission, flag) => {
         console.log(company, mission, flag)
-        setOpen(false);
+        setAddOpen(false);
         // If the flag is false then user just clicked cancel
         if (!flag) return;
 
         // Check if the data is given is valid
-        if ((company.length == 0) || (mission.length == 0)) return;
+        if ((company.length === 0) || (mission.length === 0)) return;
 
         // Add the company to database
         const companyID = nanoid()
@@ -103,8 +148,42 @@ function Companies() {
         
     }
 
+    const handleJoinClose = (companyId, flag) => {
+        setJoinOpen(false);
+        // If the flag is false then user just clicked cancel
+        if (!flag) return;
+
+        const oldCompany = company[0].companyId;
+
+        // Add user to new company
+        db.collection('companies').doc(companyId).update({
+            members: firebase.firestore.FieldValue.arrayUnion(userID)
+        })
+        // On success
+        .then((val) => {
+            console.log("Joined", companyId)
+        })
+        // On Error
+        .catch((val) => {
+            console.log("Could not join", company, ":", val)
+        });
+        console.log(company)
+
+        // Remove user from old company
+        db.collection('companies').doc(oldCompany).update({
+            members: firebase.firestore.FieldValue.arrayRemove(userID)
+        })
+        // On success
+        .then((val) => {
+            console.log("Removed from old", oldCompany)
+        })
+        // On Error
+        .catch((val) => {
+            console.log("Could not remove", oldCompany, ":", val)
+        });
+    }
+
     // First determine if the user is in a company.
-    console.log(company);
     if (loading) return (<h1>  Loading </h1>);
 
     return (
@@ -112,20 +191,23 @@ function Companies() {
             {/* If the user is a part of a company display the company info, otherwise display the option
             to create a new company */}
             { 
-            company.length != 0 ?
+            company.length !== 0 ?
                 <Company name={company[0].name} mission={company[0].mission}/> 
             :
                 <>
                     <h3>You are not apart of any company!</h3>
-                    <Button variant="contained" onClick={() => setOpen(true)}>Add a company</Button>
+                    <Button variant="contained" onClick={() => setAddOpen(true)}>Add a company</Button>
                 </>
             }
             
-            {/* Pop form to create a new company. */}
-            <AddCompany open={open} onClose={handleClose}/>
+            {/* Pop up form to create a new company. */}
+            <AddCompany open={addOpen} onClose={handleAddClose}/>
             
             <br/>
-            <Button variant="contained" onClick={() => console.log('Joining a new company')}>Join another company</Button>
+            <Button variant="contained" onClick={() => setJoinOpen(true)}>Join another company</Button>
+
+            {/* Pop up form to join another company. */}
+            <JoinCompany open={joinOpen} onClose={handleJoinClose} userId={userID} update={company} db={db}/>
 
         </div>
     );

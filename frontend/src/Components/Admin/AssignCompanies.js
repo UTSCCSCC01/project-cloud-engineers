@@ -3,7 +3,7 @@ import { useFirebase } from "../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { makeStyles } from '@material-ui/core/styles';
 import MuiAlert from '@material-ui/lab/Alert';
-import { Typography, Button, Select, InputLabel, MenuItem, FormHelperText, FormControl, Snackbar } from "@material-ui/core";
+import { Typography, Button, Select, InputLabel, MenuItem, FormControl, Snackbar } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -60,11 +60,14 @@ function AssignCompanies() {
         
         switch (type) {
             case 0:
-                setSuccessAlert(false);                
+                setSuccessAlert(false);    
+                break;            
             case 1:
                 setFailAlert(false);
+                break;
             case 2:
                 setInfoAlert(false);
+                break;
             default:
                 break;
         }
