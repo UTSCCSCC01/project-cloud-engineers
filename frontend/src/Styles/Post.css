@@ -24,6 +24,12 @@ h3{
     border: 2px solid blue;
 }
 
+.post__edit{
+    resize: none;
+    width: 480px;
+    margin: 0 0 0.25rem 1rem;
+}
+
 .post__actions{
     display: flex;
     justify-content: space-between;
@@ -40,13 +46,13 @@ h3{
     font-size: x-small;
 }
 
-.post__deletebtn {
+.post__adminbtns {
     flex-grow: 1;
     display: flex;
     justify-content: flex-end;
 }
 
-.post__likebtn:hover, .post__commentbtn:hover, .post__deletebtn:hover {
+.post__likebtn:hover, .post__commentbtn:hover, .post__deletebtn:hover, .post__editbtn:hover {
     cursor: pointer;
     color: blue;
 }

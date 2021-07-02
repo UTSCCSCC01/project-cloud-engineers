@@ -1,12 +1,11 @@
 import React, {useState, useEffect} from 'react'
 import { FormControl,Input,InputLabel } from '@material-ui/core'
-import Button from '@material-ui/core/Button';
 import Post from './Post';
 import '../../../Styles/PostList.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { nanoid } from 'nanoid'
-import Avatar from '@material-ui/core/Avatar';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import { Avatar, Button} from "@material-ui/core";
 
 function PostList() {
     
@@ -123,6 +122,27 @@ function PostList() {
         return deleteCallBack;
     }
 
+    function editPost(postId) {
+        function editCallBack(content) {
+            console.log("Editing", postId);
+            // Call fire base to update the post
+            db.collection('posts').doc(postId).update({
+                content: content
+            })
+            .then(
+                // on successful change
+                (val) => {
+                    console.log('Update Succesful!', val);
+                },
+                // on non-sucessful change
+                (err) => {
+                    console.log('Error, could not update!', err);
+                }
+            );
+        }
+        return editCallBack;
+    }
+
     return (
         <div className="postList">
             
@@ -179,11 +199,12 @@ function PostList() {
                         timestamp={post.timestamp}
                         media={post.media}
                         postId={post.postId} 
+                        editCallBack={editPost(post.postId)}
                         deleteCallBack={deletePost(post.postId)}
                     />
                 ))}                
             </div>
-
+            
         </div>
     )
 }
