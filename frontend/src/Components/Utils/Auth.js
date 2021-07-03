@@ -62,11 +62,42 @@ function useAuthProvider() {
     });
   }
 
+  const checkSession = async (cb) => {
+    // check if the token and user are in local storage
+    let token = localStorage.getItem("authToken");
+    let user = localStorage.getItem("user");
+    if ( token !== null && token !== "" && user !== null && user !== "") {
+        // revalidate the token if it exists
+        try {
+            let response = await axios.post('http://localhost:8080/verify', {}, {
+                headers: {
+                    'Authorization': `token ${token}`
+                }
+            });
+            setUser(JSON.parse(user));
+            cb();
+        } catch (error) {
+            console.error("auth caught error on verify", error);
+            // set the local storage of auth and user to null
+            localStorage.setItem("authToken", "");
+            localStorage.setItem("user", "");
+            setUser(null);
+        }
+    } else {
+        setUser(null);
+    }
+    // check if tings in local Storage
+    // if in local storage then, then send req to auth service
+    // depending on response from backed, either call callback or setUser(null)
+    // user ? cb() : console.log("not logged in");
+  }
+
   return {
     user,
     signIn,
     signOut,
-    signUp
+    signUp,
+    checkSession
   };
 }
 

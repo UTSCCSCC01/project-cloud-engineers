@@ -1,101 +1,62 @@
-import React, { useState, useEffect } from "react";
-import {useFirebase} from '../Utils/Firebase';
+import React from "react";
 import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
-import { Row, Col, Steps, Panel, Button, ButtonGroup } from 'rsuite';
-import 'rsuite/dist/styles/rsuite-default.css';
-import {Link} from 'react-router-dom'
+import { Switch, Route, useRouteMatch, Link } from 'react-router-dom';
+
+import { useFirebase } from '../Utils/Firebase';
+import Course from './Course';
+import CreateCourse from './CreateCourse';
+import Card from '../Utils/Card';
 
 function Elearning() {
-  const Card = props => (
-    <Panel {...props} bordered header={props.stage}>
-      <Link to={{
-    
-        pathname:'/Stages/'+props.stage.split(" ").join(""),
-        state:{
-          test:"Mustafa"
-        }
-        }}>Modules</Link>
-    </Panel>
+  let user = JSON.parse(localStorage.getItem("user"));
+  let { path } = useRouteMatch();
+
+  let firebase = useFirebase();
+  let db = firebase.firestore();
+
+  const [data, loading, error] = useCollectionDataOnce(
+    user.role === 'instructor' ? db.collection("courses") :
+      db.collection("courses").where('students', 'array-contains', `${user.userID}`)
   );
 
-  const [step, setStep] = React.useState(0);
-  const onChange = nextStep => {
-    setStep(nextStep < 0 ? 0 : nextStep > 3 ? 3 : nextStep);
-  };
+  return (
+    <Switch>
+      <Route exact path={path}>
+        <div className="home__page">
+          {user.role === 'instructor' ? <Link to={`${path}/create-course`}>creates new course</Link> : <></>}
 
-  const onNext = () => onChange(step + 1);
-  const onPrevious = () => onChange(step - 1);
-  function generateMarkup(stages, steps){
-    let desc = "";
-      return (
-        <div>
-          <ButtonGroup>
-            <Button onClick={onPrevious} disabled={step === 0}>
-              Previous
-            </Button>
-            <Button onClick={onNext} disabled={step === 3}>
-              Next
-            </Button>
-          </ButtonGroup>
-
-          <Steps current={step}>               
-            <Steps.Item title="Preincubation" description={desc} />
-            <Steps.Item title="Incubation" description={desc} />
-            <Steps.Item title="Implementation" description={desc} />
-            <Steps.Item title="Impact Analysis" description={desc} />
-          </Steps>
-
-          <hr />
-          <br></br>
-
-          {
-            <Row>
-              {
-            stages.map((stage) =>{
-              return (
-                <Col md={6} sm={12}>
-                  <Card stage={stage}/>
-                </Col>
-                )
-            })
-          }
-            </Row>
-          }
+          {loading ? <p>Loading...</p> : (
+            error ? <p>{console.log(error)}Error...</p> :
+              <div>
+                {data.length < 1 ? <h1>You are not enrolled in any courses</h1> :
+                  <div className="selectionPage">
+                    {data.map(course => {
+                      return (
+                        <Card
+                          imgSrc="https://www.elegantthemes.com/blog/wp-content/uploads/2020/06/Divi-Community-Update-May-2020-scaled.jpg"
+                          key={course.courseId}
+                          title={course.title}
+                          description={course.description}
+                          linkPath={`${path}/${course.courseId}`}
+                          buttonText="Go to course"
+                        />
+                      )
+                    })
+                    }
+                  </div>
+                }
+              </div>
+          )}
         </div>
-      );
-  }
-
-    let firebase = useFirebase();
-    let db = firebase.firestore();
-    let user = JSON.parse(localStorage.getItem("user"));
-  
-    const [values, loading, error] = useCollectionDataOnce(db.collection("stages"));
-    const [visStages, setStages] = useState([]);
-    const [visStageSteps, setStageSteps] = useState([]);
-
-    useEffect(() => {
-        if (values) {
-            //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
-            let stageArr = [];
-            let stageValues = [];
-            for (const [key, value] of Object.entries(values[0])) {
-                stageArr.push(key);
-                stageValues.push(value);
-            }
-            setStages(stageArr);
-            setStageSteps(stageValues);
-        }
-      }, [values]);
-  
-      if (loading) return <p>Loading...</p>;
-      if (error) return <p>Error :(</p>;
-    
-    return (
-        <div>
-            <h2>E-learning</h2>
-            {generateMarkup(visStages,visStageSteps)}                 
-        </div>
-    )
+      </Route>
+      <Route path={`${path}/create-course`}>
+        <CreateCourse />
+      </Route>
+      <Route path={`${path}/:courseId`}>
+        <Course />
+      </Route>
+    </Switch>
+  )
 }
 
 export default Elearning
