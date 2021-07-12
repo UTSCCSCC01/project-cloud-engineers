@@ -214,24 +214,21 @@ Tracking on Jira Total Mark: 22.5 / 24
 
 ---
 
-## Sprint Demo (Max 10 marks) 
-  - Attendance (max 2 marks)
-    - 2 marks = full team is present
-    - 1 mark = one member is not present
-    - 0 marks = more than one member is not present
-  
-  - Working software (max 2 marks)
-  Tuesday: 2 features
-  Wednesday/Thursday: 3 features
-  Friday: 4 features
-  
-    - 8 marks = features presented work flawlessly
-    - 1 mark removed for each error or missing records on Jira
+Marking Rubric for the Sprint 1 class demo
+==========================================
+Team name: Cloud Engineers
 
-  Your Mark: _ / 10
+Attendance: 2 marks full team is attending, 1 mark if at least one member not present, 0 marks the whole team not present
+Your mark:2
+
+Working software: 8 marks if at least 4 features work flawlessly, take away 1 mark for each error or missing records on Jira.
+Your mark: 8
+
+
+Total demo mark: 10/10
 
 ---
 
 ## Total Mark
 
-75.5 / 89
+85.5 / 89
