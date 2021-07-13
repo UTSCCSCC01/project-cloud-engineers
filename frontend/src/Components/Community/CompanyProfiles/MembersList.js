@@ -27,7 +27,7 @@ function MembersList({creatorId, members, companyId}) {
             })
         }
         fetchingData();
-    }, [])
+    }, [members])
 
     const handleRemoval = (uid) => {
         console.log('This is the uid: ', uid);

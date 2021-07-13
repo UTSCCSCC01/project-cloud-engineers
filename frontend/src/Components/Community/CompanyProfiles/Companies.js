@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Company from './Company';
 import MembersList from './MembersList';
+import RequestList from './RequestList';
 import '../../../Styles/Companies.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -36,7 +37,7 @@ function JoinCompany({onClose, open, userId, update, db}) {
             </DialogContent>
             <List>
                 {companies.map((company) => (
-                    <ListItem button onClick={() => onClose(company.companyId, true)} key={company.companyId}>
+                    <ListItem button onClick={() => onClose(company.companyId,company.creatorId,company.name, true)} key={company.companyId}>
                         <ListItemText primary={`${company.name} (${company.companyId})`} />
                     </ListItem>
                 ))}
@@ -166,8 +167,8 @@ function Companies() {
     const firebase = useFirebase();
     const db = firebase.firestore();
     const userID = JSON.parse(localStorage.user).userID;
+    const userName = JSON.parse(localStorage.user).username;
     const [company, loading] = useCollectionData(db.collection('companies').where('members', 'array-contains-any', [userID]));
-    console.log('Curent: ', userID);
     const [addOpen, setAddOpen] = useState(false);
     const [joinOpen, setJoinOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
@@ -247,40 +248,66 @@ function Companies() {
 
     }
 
-    const handleJoinClose = (companyId, flag) => {
+    const handleJoinClose = (companyId,creatorId,companyname,flag) => {
         setJoinOpen(false);
         // If the flag is false then user just clicked cancel
-        if (!flag) return;        
+        if (!flag) return;
+        
+        const reqId = nanoid();
 
-        // Add user to new company
-        db.collection('companies').doc(companyId).update({
-            members: firebase.firestore.FieldValue.arrayUnion(userID)
-        })
-        // On success
-        .then((val) => {
-            console.log("Joined", companyId)
-        })
-        // On Error
-        .catch((val) => {
-            console.log("Could not join", company, ":", val)
-        });
-        console.log(company)
+        if(userID != creatorId){
+            
+            db.collection('requests').doc(reqId).set({
+                creatorId: creatorId,
+                senderId: userID,
+                senderName: userName,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                reqId: reqId,
+                currentCompanyId: company.length != 0 ? company[0].companyId : '',
+                newcompanyId: companyId,
+                newcompanyName: companyname,  
+            })
+            .then((docRef) => {
+                console.log("added post to firestore!")
+                alert('Request sent to join: '+companyname);
+            })
+            .catch((error) => {
+                console.log("Error:",error)
+            });
 
-        if(company.length != 0){
-            const oldCompany = company[0].companyId;
-
-            // Remove user from old company
-            db.collection('companies').doc(oldCompany).update({
-                members: firebase.firestore.FieldValue.arrayRemove(userID)
+        }
+        else{
+            
+            // Add user to new company
+            db.collection('companies').doc(companyId).update({
+                members: firebase.firestore.FieldValue.arrayUnion(userID)
             })
             // On success
             .then((val) => {
-                console.log("Removed from old", oldCompany)
+                console.log("Joined", companyId)
             })
             // On Error
             .catch((val) => {
-                console.log("Could not remove", oldCompany, ":", val)
+                console.log("Could not join", company, ":", val)
             });
+            console.log(company)
+
+            if(company.length != 0){
+                const oldCompany = company[0].companyId;
+
+                // Remove user from old company
+                db.collection('companies').doc(oldCompany).update({
+                    members: firebase.firestore.FieldValue.arrayRemove(userID)
+                })
+                // On success
+                .then((val) => {
+                    console.log("Removed from old", oldCompany)
+                })
+                // On Error
+                .catch((val) => {
+                    console.log("Could not remove", oldCompany, ":", val)
+                });
+            }
         }
     }
 
@@ -333,7 +360,7 @@ function Companies() {
             </div>
 
             <div className="companies_requests">
-                <h1>This is the requests List</h1>
+                {company.length !== 0 ? (userID == company[0].creatorId ? <RequestList/> : null) : null}
             </div>
         </div>
     );
