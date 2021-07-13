@@ -74,6 +74,29 @@ function CommentList({postID}) {
 
         setcontent('');
     }
+
+    function deleteComment(commentId) {
+        function deleteCallBack() {
+            console.log("Deleting", commentId);
+            // Call fire base to delete the post
+            db.collection('comments').doc(commentId).delete()
+            .then(
+                // on successful change
+                (val) => {
+                    console.log('Delete Succesful!', val);
+                    setcomments( comments.filter( value => 
+                        value.commentId !== commentId
+                    ));
+                },
+                // on non-sucessful change
+                (err) => {
+                    console.log('Error, could not delete!', err);
+                }
+            );
+        }
+        return deleteCallBack;
+    }
+
     
     return (
         <div className="commentList">
@@ -109,6 +132,8 @@ function CommentList({postID}) {
                             content={comment.content}
                             username={comment.authorName}
                             timestamp={comment.timestamp}
+                            role={user.role}
+                            deleteCallback={deleteComment(comment.commentId)}
                         />
                     ))}   
             </div>

@@ -15,3 +15,8 @@
     display: flex;
     align-items: center;
 }
+
+.comment__deletebtn:hover {
+    cursor: pointer;
+    color: blue;
+}
