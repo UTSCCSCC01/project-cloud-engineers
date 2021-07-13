@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Company from './Company';
+import MembersList from './MembersList';
 import '../../../Styles/Companies.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -166,7 +167,7 @@ function Companies() {
     const db = firebase.firestore();
     const userID = JSON.parse(localStorage.user).userID;
     const [company, loading] = useCollectionData(db.collection('companies').where('members', 'array-contains-any', [userID]));
-
+    console.log('Curent: ', userID);
     const [addOpen, setAddOpen] = useState(false);
     const [joinOpen, setJoinOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
@@ -249,9 +250,7 @@ function Companies() {
     const handleJoinClose = (companyId, flag) => {
         setJoinOpen(false);
         // If the flag is false then user just clicked cancel
-        if (!flag) return;
-
-        const oldCompany = company[0].companyId;
+        if (!flag) return;        
 
         // Add user to new company
         db.collection('companies').doc(companyId).update({
@@ -267,48 +266,75 @@ function Companies() {
         });
         console.log(company)
 
-        // Remove user from old company
-        db.collection('companies').doc(oldCompany).update({
-            members: firebase.firestore.FieldValue.arrayRemove(userID)
-        })
-        // On success
-        .then((val) => {
-            console.log("Removed from old", oldCompany)
-        })
-        // On Error
-        .catch((val) => {
-            console.log("Could not remove", oldCompany, ":", val)
-        });
+        if(company.length != 0){
+            const oldCompany = company[0].companyId;
+
+            // Remove user from old company
+            db.collection('companies').doc(oldCompany).update({
+                members: firebase.firestore.FieldValue.arrayRemove(userID)
+            })
+            // On success
+            .then((val) => {
+                console.log("Removed from old", oldCompany)
+            })
+            // On Error
+            .catch((val) => {
+                console.log("Could not remove", oldCompany, ":", val)
+            });
+        }
     }
 
     // First determine if the user is in a company.
     if (loading) return (<h1>  Loading </h1>);
-
+    console.log('Company: ',company);
     return (
-        <div className='companies_container'>  
-            {/* If the user is a part of a company display the company info, otherwise display the option
-            to create a new company */}
-            { 
-            company.length !== 0 ?
-                <>
-                    <Company name={company[0].name} mission={company[0].mission} editCallback={setEditOpen}/>
-                    {/* Pop up form to edit company. */}
-                    <EditCompany open={editOpen} onClose={handleEditClose} initialCompany={company[0].name} initialMission={company[0].mission}/>
-                    {/* Pop up form to join another company. */}
-                    <JoinCompany open={joinOpen} onClose={handleJoinClose} userId={userID} update={company[0].name} db={db}/>
-                    <br/>
-                    <Button variant="contained" onClick={() => setJoinOpen(true)}>Join another company</Button>
-                </>
-            :
-                <>
-                    <h3>You are not apart of any company!</h3>
-                    <Button variant="contained" onClick={() => setAddOpen(true)}>Add a company</Button>
-                    {/* Pop up form to create a new company. */}
-                    <AddCompany open={addOpen} onClose={handleAddClose}/>
-                </>
-            }
-        
-        
+        <div className="companies">
+            <div className='companies_container'>  
+                {/* If the user is a part of a company display the company info, otherwise display the option
+                to create a new company */}
+                { 
+                company.length !== 0 ?
+                    <>
+                        <Company name={company[0].name} mission={company[0].mission} editCallback={setEditOpen}/>
+                        {/* Pop up form to edit company. */}
+                        <EditCompany open={editOpen} onClose={handleEditClose} initialCompany={company[0].name} initialMission={company[0].mission}/>
+                        {/* Pop up form to join another company. */}
+                        <JoinCompany open={joinOpen} onClose={handleJoinClose} userId={userID} update={company[0].name} db={db}/>
+                        <br/>
+                        <Button variant="contained" onClick={() => setJoinOpen(true)}>Join another company</Button>
+                    </>
+                :
+                    <>
+                        <h3>You are not apart of any company!</h3>
+                        <Button variant="contained" onClick={() => setAddOpen(true)}>Add a company</Button>
+                        <br/>
+                        {/* Pop up form to create a new company. */}
+                        <Button variant="contained" onClick={() => setJoinOpen(true)}>Join another company</Button>
+                        <JoinCompany open={joinOpen} onClose={handleJoinClose} userId={userID} update={company.length} db={db}/>
+                        <br/>
+                        <AddCompany open={addOpen} onClose={handleAddClose}/>
+                    </>
+                }
+            
+            
+            </div>
+
+            <div className="companies_memberlist">
+                {
+                    company.length !== 0 ? 
+                        <MembersList
+                            creatorId= {company[0].creatorId}
+                            members= {company[0].members} 
+                            companyId = {company[0].companyId}
+                        />
+                    :
+                    <h2>No members in company</h2>
+                }
+            </div>
+
+            <div className="companies_requests">
+                <h1>This is the requests List</h1>
+            </div>
         </div>
     );
 }
