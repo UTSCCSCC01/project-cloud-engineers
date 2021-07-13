@@ -4,6 +4,8 @@ import '../Styles/App.css';
 import { useAuth } from './Utils/Auth'
 import { useFirebase } from './Utils/Firebase';
 
+import Avatar from '@material-ui/core/Avatar';
+
 import React, { useState } from "react";
 
 import { useCollectionData } from "react-firebase-hooks/firestore"
