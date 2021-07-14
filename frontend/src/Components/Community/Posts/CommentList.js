@@ -97,6 +97,34 @@ function CommentList({postID}) {
         return deleteCallBack;
     }
 
+
+    function editComment(commentId) {
+        function editCallBack(content) {
+            console.log("Editing", commentId);
+            // Call fire base to update the post
+            db.collection('comments').doc(commentId).update({
+                content: content
+            })
+            .then(
+                // on successful change
+                (val) => {
+                    console.log('Update Succesful!', val);
+                    setcomments(comments.map( comment => {
+                        if (comment.commentId === commentId) {
+                            comment.content = content;
+                        }
+                        return comment  
+                    }));
+                },
+                // on non-sucessful change
+                (err) => {
+                    console.log('Error, could not update!', err);
+                }
+            );
+        }
+        return editCallBack;
+    }
+
     
     return (
         <div className="commentList">
@@ -134,6 +162,7 @@ function CommentList({postID}) {
                             timestamp={comment.timestamp}
                             role={user.role}
                             deleteCallback={deleteComment(comment.commentId)}
+                            editCallBack={editComment(comment.commentId)}
                         />
                     ))}   
             </div>
