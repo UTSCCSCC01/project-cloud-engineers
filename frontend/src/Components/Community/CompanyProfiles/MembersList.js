@@ -11,6 +11,7 @@ function MembersList({creatorId, members, companyId}) {
     
     const [memberNames, setmemberNames] = useState([]);
 
+    //Get information about all members in the company.
     useEffect(() => {
         async function fetchingData(){
             await db.collection('users').where("uid", "in", members).get().then((querySnapshot)=>{
@@ -29,11 +30,14 @@ function MembersList({creatorId, members, companyId}) {
         fetchingData();
     }, [members])
 
+    //Update states and data base when company owner removes member.
     const handleRemoval = (uid) => {
         console.log('This is the uid: ', uid);
         const temp = members.filter((member) => member != uid);
         const temp1 = memberNames.filter((member) => member.uid != uid);
         setmemberNames(temp1);
+        
+        //Remove member from company collection.
         db.collection('companies').doc(companyId).update({
             members: temp
         })
@@ -47,6 +51,7 @@ function MembersList({creatorId, members, companyId}) {
     }
 
     return (
+        //List of all members
         <div className="memberlist">
             <h2>Members:</h2>
             {memberNames.map(member => {

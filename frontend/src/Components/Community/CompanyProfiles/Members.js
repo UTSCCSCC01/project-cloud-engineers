@@ -5,6 +5,7 @@ import '../../../Styles/Member.css'
 
 function Members({uid, firstname, lastname, username, creatorId, companyId, handleRemoval}) {
     
+    //Current user.
     let user = JSON.parse(localStorage.user);
 
     return (
