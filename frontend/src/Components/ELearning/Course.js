@@ -57,10 +57,8 @@ function Course(props) {
         }));
 
     const classes = useStyles();
-
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
-
     return (
         <Switch>
             <Route exact path={path}>
@@ -111,7 +109,7 @@ function Course(props) {
                         </main>
                     </div>
 
-                    { user.role === 'instructor' ? 
+                    { (user.role === 'instructor' ) ? 
                     <div>
                         <Link to={`${courseId}/create-assignment`}>Create New Assignment</Link>
                         <br />
