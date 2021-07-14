@@ -98,7 +98,9 @@ function PostList() {
         
     }
 
+    // Called when an admin or mod clicks delete post!
     function deletePost(postId, fileId) {
+        // Each comment will have it's own callback function for deleting posts
         function deleteCallBack() {
             const fileID = fileId;
             console.log("Deleting", postId);
