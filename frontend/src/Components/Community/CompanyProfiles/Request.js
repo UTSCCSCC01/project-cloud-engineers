@@ -12,6 +12,7 @@ function Request({reqInfo, handleDecision}) {
     const db = firebase.firestore();
     let user = JSON.parse(localStorage.user);
 
+    //Remove decided request from the database as owner has made a decision.
     const deleteReq = () => {
         db.collection("requests").doc(reqInfo.reqId).delete().then(() => {
             console.log("Document successfully deleted!");
@@ -20,10 +21,12 @@ function Request({reqInfo, handleDecision}) {
         });
     }
 
+    //Handles the case when company owner accepts a request.
     const handleAccept = () => {
         alert('Accepted Request');
         handleDecision(reqInfo.reqId);
         
+        //Add request sender as a member of the company.
         db.collection('companies').doc(reqInfo.newcompanyId).update({
             members: firebase.firestore.FieldValue.arrayUnion(reqInfo.senderId)
         })
@@ -36,6 +39,7 @@ function Request({reqInfo, handleDecision}) {
             console.log("Could not join", reqInfo.newcompanyName);
         });
 
+        //Remove member from current company they are a part of.
         if(reqInfo.currentCompanyId != ''){
             db.collection('companies').doc(reqInfo.currentCompanyId).update({
                 members: firebase.firestore.FieldValue.arrayRemove(reqInfo.senderId)
@@ -53,6 +57,7 @@ function Request({reqInfo, handleDecision}) {
         deleteReq();
     }
 
+    //Handles the case when company owner rejects request.
     const handleReject = () => {
         alert('Rejected Request');
         handleDecision(reqInfo.reqId);
@@ -60,6 +65,7 @@ function Request({reqInfo, handleDecision}) {
     }
 
     return (
+        //Request body
         <div className="request">
             <div className="req_info">
                 <div className="req__avatar">

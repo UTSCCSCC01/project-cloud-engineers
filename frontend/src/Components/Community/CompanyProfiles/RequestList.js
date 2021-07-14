@@ -11,11 +11,13 @@ function RequestList() {
 
     const [requests, setRequests] = useState([]);
 
+    //Remove request when owner has made a decision.
     const handleDecision = (requestId) => {
         let temp = requests.filter((req) => req.reqId != requestId);
         setRequests(temp);
     }
 
+    //Get all the requests information from the database.
     useEffect(() => {
         async function fetchingData(){
             await db.collection('requests').where("creatorId", "==", user.userID).get().then((querySnapshot)=>{
@@ -30,6 +32,7 @@ function RequestList() {
     }, [])
 
     return (
+        //List of all requests
         <div className="reqlist">
             <h2>Requests:</h2>
             {requests.map((req) => (
