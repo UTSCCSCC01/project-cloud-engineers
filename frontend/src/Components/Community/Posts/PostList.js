@@ -4,7 +4,6 @@ import Post from './Post';
 import '../../../Styles/PostList.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { nanoid } from 'nanoid'
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
 import { Avatar, Button} from "@material-ui/core";
 
 function PostList() {
@@ -15,12 +14,9 @@ function PostList() {
     let user = JSON.parse(localStorage.user);
     const [caption, setcaption] = useState('');
     const [image, setImage] = useState(null);
-    const [url, setUrl] = useState("");
-    const [progress, setProgress] = useState(0);
     
     // Need to call setPosts whenever someone deletes a post
     const [posts, setposts] = useState([]);
-    const [comments, setcomments] = useState([]);
     const [newID, setnewID] = useState(nanoid())
     
     //Handles changes made to the media input textbox for posts.
@@ -35,34 +31,6 @@ function PostList() {
         setcaption(e.target.value);
         setnewID(nanoid());
     }
-    
-    //Uploads media(images for now) to the firebase storage platform.
-    //Assigns url for image to the corresponding post document.
-    const handleUpload = () => {
-        const uploadTask = firebase.storage().ref('media/posts/'+newID+'/' + image.name).put(image);
-        uploadTask.on(
-            "state_changed",
-            snapshot => {
-              const progress = Math.round(
-                (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-              );
-              setProgress(progress);
-            },
-            error => {
-              console.log(error);
-            },
-            () => {
-              firebase.storage()
-                .ref('media/posts/'+newID+'/')
-                .child(image.name)
-                .getDownloadURL()
-                .then(url => {
-                  setUrl(url);
-                  console.log("URL:", url);
-                });
-            }
-          );
-    }
 
     //Gets all post information whenever user enters the posts page.
     useEffect(() => {
@@ -71,11 +39,45 @@ function PostList() {
         ))
     }, [])
 
+    // Async function to upload a file to firebase.
+    async function uploadFile() {
+        let fileId = nanoid();
+        let fileRef = firebase.storage().ref().child(fileId);
+        await fileRef.put(image);
+        let Url = await fileRef.getDownloadURL();
+        await firebase.firestore().collection('files').doc(fileId).set({
+            fileId: fileId,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            uploaderId: user.userID,
+            url: Url,
+            name: image.name,
+            type: image.type
+            // privacy: pri,
+        });
+        return [fileId,Url]; 
+    }
+
     //Adds posts and it's corresponding information to the firestore database.
-    function addPost(event){
+    async function addPost(event){
 
         event.preventDefault();
-        
+
+        // If there is no caption for the post, then we don't create it
+        if (!caption) {
+            console.log('There is no caption');
+            return;
+        }
+        // In the case an image is attached, we first upload it to firebase.\
+        let fileId = '';
+        let url = '';
+        console.log(image)
+        if (image !== null) {
+            [fileId, url] = await uploadFile(image);
+            console.log('Uploaded image to firebase');
+        }
+        console.log(fileId);
+        console.log(url);
+        // Add the post to firebase
         db.collection('posts').doc(newID).set({
             content: caption,
             authorId: user.userID,
@@ -85,7 +87,8 @@ function PostList() {
             privacy: 'public',
             attachments:[],
             postId: newID,
-            media: url,
+            fileId: fileId,
+            url: url
         })
         .then((docRef) => {
             console.log("added post to firestore!")
@@ -93,11 +96,9 @@ function PostList() {
         .catch((error) => {
             console.log("Error:",error)
         });
-
         setcaption('');
         setImage(null);
-        setUrl('');
-
+        
     }
 
     function deletePost(postId) {
@@ -163,14 +164,6 @@ function PostList() {
                     
                     <div className="postList__media">
                         <input className="filebtn" type="file" onChange={handleChange} />
-                        <Button 
-                                disabled={!caption || !image} 
-                                color="primary" className="mediabtn" 
-                                onClick={handleUpload}
-                        > 
-                            <AddPhotoAlternateIcon/> 
-                            UPLOAD MEDIA
-                        </Button>
                     </div>
 
                     <div className="postList__btn">
@@ -197,7 +190,7 @@ function PostList() {
                         username={post.authorName}
                         role={user.role}
                         timestamp={post.timestamp}
-                        media={post.media}
+                        media={post.url}
                         postId={post.postId} 
                         editCallBack={editPost(post.postId)}
                         deleteCallBack={deletePost(post.postId)}

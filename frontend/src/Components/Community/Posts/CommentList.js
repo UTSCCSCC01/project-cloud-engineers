@@ -25,7 +25,6 @@ function CommentList({postID}) {
         setcontent(e.target.value);
         setnewID(nanoid());
     }
-
     //Gets all comments attached to a specific post from the database.
     useEffect(() => {
         const tempArray = [];
@@ -35,6 +34,17 @@ function CommentList({postID}) {
             querySnapshot.forEach((doc) => {
                 tempArray.push(doc.data())
             });
+            tempArray.sort( (a,b) => {
+                if (a.timestamp < b.timestamp) {
+                    return -1;
+                }
+                else if (a.timestamp == b.timestamp) {
+                    return 0;
+                }
+                else {
+                    return 1;
+                }
+            })
             setcomments(tempArray);
         })
         .catch((error) => {
