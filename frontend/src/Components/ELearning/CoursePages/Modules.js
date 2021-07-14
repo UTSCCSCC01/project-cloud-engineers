@@ -52,11 +52,11 @@ function Modules(props) {
         const t = firebase.firestore.Timestamp.fromDate(new Date());
 
         if(newCard.type == "assignment"){
-            let date = new Date(newCard.duedate.seconds * 1000);
+          let test = Date.parse(newCard.duedate);
+          let date = new Date(test * 1000);
 
-            let dueDate = ("Date: "+date.getDate()+
-              "/"+(date.getMonth()+1)+
-              "/"+date.getFullYear());
+          let dueDate = (date.getDate()+
+            "/"+(date.getMonth()+1));  
     
             return (
               <Card className={classes.root}>
