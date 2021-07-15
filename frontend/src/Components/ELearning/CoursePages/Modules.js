@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
+import React, { useState, useEffect, useRef } from "react";
+import { useCollectionDataOnce, useCollectionData } from 'react-firebase-hooks/firestore';
 import { useParams } from 'react-router-dom';
 import {List,ListItemText, ListItem, ListSubheader} from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
@@ -120,7 +120,7 @@ function Modules(props) {
           <br></br>
           <br></br>
           {
-              curDisplay.length!=0 && MediaCard(curDisplay)
+              curDisplay.length!=0 && (<MediaCard curDisplay={curDisplay}/>)
           }
 
 
@@ -134,25 +134,35 @@ function Modules(props) {
 
 
 // Display more info for a specific module
-function MediaCard(curDisplay) {
+function MediaCard({curDisplay}) {
 
 
   //const classes = useStyles();
+  const [fileURL, setFileURL] = useState('');
+  const [fileName, setFileName] = useState('');
 
   const firebase = useFirebase();
   let db = firebase.firestore();
 
   let newCard = JSON.parse(curDisplay);
+  console.log(newCard)
+
   const t = firebase.firestore.Timestamp.fromDate(new Date());
 
   // Fetching user data from database
   const uid = JSON.parse(localStorage.getItem('user')).userID;
-  //const [userSubmission, loading] = db.collection('submissions').where('assignmentId', '==', newCard.cardId).where('userId', '==', uid)
+  const sid = `${newCard.assignmentId}_${uid}`; //submission id that ties one unique user and assignment to a single submission
 
-  // keep track of submitted file
-  //const [uploadFile, setUploadFile] = useState(null);
+  const [userSubmission, loading] = useCollectionData(db.collection('submissions').where('submissionId', '==', sid));
+  if (!loading) {
+    console.log(userSubmission);
+  }
 
-  
+  // clears file input whenever
+  const fileRef = useRef();
+  useEffect(() => {
+    fileRef.current.value = '';
+  }, [curDisplay, fileURL])
 
   // Downloads media
   async function handleDownloads(files){
@@ -166,12 +176,42 @@ function MediaCard(curDisplay) {
     }
   }
 
-  const handleInputChange = (event) => {
+  const updateFirestore = async () => {
+    await firebase.firestore().collection('submissions').doc(sid).set({
+      submissionId: sid,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      userId: uid,
+      assignId: newCard.assignmentId,
+      url: fileURL,
+      filename: fileName
+
+    }, {merge: true})
+    .then(
+      (val) => {console.log('firestore updated', val)},
+      (err) => {console.log('firestore update fail')}
+
+    );
+  }
+
+  const handleInputChange = async (event) => {
+    console.log('here')
     const file = event.target.files[0];
-    const formData = FormData();
-    formData.append('filename', file);
+    await setFileName(file.name);
+    console.log({filename: fileName, file: file});
 
+    console.log(newCard.assignmentId);
 
+    let fileRef = firebase.storage().ref().child('submissions').child(`${newCard.assignmentId}`).child(`${uid}`);
+    await fileRef.put(file)
+    .then(
+      (val) => {console.log('file uploaded successfully', val)},
+      (err) => {console.log('upload fail', err)});
+   
+    await setFileURL(fileRef.getDownloadURL());
+    console.log(fileURL);
+
+    updateFirestore();
+      
   }
 
   // Submit Assignment
@@ -211,10 +251,11 @@ function MediaCard(curDisplay) {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Button size="small" color="primary" value={newCard.files} onClick={() => { handleDownloads(newCard.files)}} >
+              <Button size="small" color="primary" value={newCard.files} onClick={() => {handleDownloads(newCard.files)}} >
                 Download
               </Button>
               <input 
+                ref={fileRef}
                 id='fileUpload'
                 type='file'
                 hidden='hidden'
