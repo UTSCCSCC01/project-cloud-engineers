@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Company from './Company';
 import MembersList from './MembersList';
 import RequestList from './RequestList';
+import DocumentList from './DocumentList';
 import '../../../Styles/Companies.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -362,6 +363,13 @@ function Companies() {
             <div className="companies_requests">
                 {company.length !== 0 ? (userID == company[0].creatorId ? <RequestList/> : null) : null}
             </div>
+
+            <div className="companies_documents">
+                {company.length !== 0  ? <DocumentList companyId={company[0].companyId} creatorId={company[0].creatorId} /> : <></>}
+            </div>
+
+
+
         </div>
     );
 }
