@@ -7,9 +7,6 @@ import '../../../Styles/Document.css'
 function Document({name, url, uploaderId, creatorId}) {
     
     const userID = JSON.parse(localStorage.user).userID;
-    console.log(userID)
-    console.log(uploaderId)
-    console.log(creatorId)
     
     return (
         <div className="document ">
