@@ -6,7 +6,7 @@ function DocumentList({companyId, creatorId,}) {
     const userID = JSON.parse(localStorage.user).userID;
     return (
         <div>
-            <h2>Documents</h2>
+            <h2>Company Documents</h2>
 
             <div className="documentlist">
                 <Document name='Document 1' url='google.ca' uploaderId={userID} creatorId={creatorId} />

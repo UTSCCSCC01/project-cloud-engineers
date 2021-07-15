@@ -323,7 +323,7 @@ function Companies() {
                 { 
                 company.length !== 0 ?
                     <>
-                        <Company name={company[0].name} mission={company[0].mission} editCallback={setEditOpen}/>
+                        <Company name={company[0].name} mission={company[0].mission} companyId = {company[0].companyId} creatorId= {company[0].creatorId} editCallback={setEditOpen}/>
                         {/* Pop up form to edit company. */}
                         <EditCompany open={editOpen} onClose={handleEditClose} initialCompany={company[0].name} initialMission={company[0].mission}/>
                         {/* Pop up form to join another company. */}
@@ -364,9 +364,6 @@ function Companies() {
                 {company.length !== 0 ? (userID == company[0].creatorId ? <RequestList/> : null) : null}
             </div>
 
-            <div className="companies_documents">
-                {company.length !== 0  ? <DocumentList companyId={company[0].companyId} creatorId={company[0].creatorId} /> : <></>}
-            </div>
 
 
 
