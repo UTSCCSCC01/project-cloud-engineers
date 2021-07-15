@@ -143,6 +143,7 @@ function Admin() {
                 
                     <MenuItem value="inaccessible"> Inaccessible </MenuItem>
                     <MenuItem value="mod"> Moderator </MenuItem>
+                    <MenuItem value="instructor"> Instructor </MenuItem>
                 
                 </Select>
                 <FormHelperText>Moderators have extra privileges in the community section.</FormHelperText>

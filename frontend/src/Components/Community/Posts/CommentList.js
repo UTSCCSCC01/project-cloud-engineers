@@ -25,7 +25,6 @@ function CommentList({postID}) {
         setcontent(e.target.value);
         setnewID(nanoid());
     }
-
     //Gets all comments attached to a specific post from the database.
     useEffect(() => {
         const tempArray = [];
@@ -35,6 +34,17 @@ function CommentList({postID}) {
             querySnapshot.forEach((doc) => {
                 tempArray.push(doc.data())
             });
+            tempArray.sort( (a,b) => {
+                if (a.timestamp < b.timestamp) {
+                    return -1;
+                }
+                else if (a.timestamp == b.timestamp) {
+                    return 0;
+                }
+                else {
+                    return 1;
+                }
+            })
             setcomments(tempArray);
         })
         .catch((error) => {
@@ -46,7 +56,9 @@ function CommentList({postID}) {
     //comments under pages.
     function addComment(event){
         event.preventDefault();
-        
+        if (content === '') {
+            return;
+        }
         const temp = {
             content: content,
             authorId: user.userID,
@@ -74,6 +86,57 @@ function CommentList({postID}) {
 
         setcontent('');
     }
+
+    function deleteComment(commentId) {
+        function deleteCallBack() {
+            console.log("Deleting", commentId);
+            // Call fire base to delete the post
+            db.collection('comments').doc(commentId).delete()
+            .then(
+                // on successful change
+                (val) => {
+                    console.log('Delete Succesful!', val);
+                    setcomments( comments.filter( value => 
+                        value.commentId !== commentId
+                    ));
+                },
+                // on non-sucessful change
+                (err) => {
+                    console.log('Error, could not delete!', err);
+                }
+            );
+        }
+        return deleteCallBack;
+    }
+
+
+    function editComment(commentId) {
+        function editCallBack(content) {
+            console.log("Editing", commentId);
+            // Call fire base to update the post
+            db.collection('comments').doc(commentId).update({
+                content: content
+            })
+            .then(
+                // on successful change
+                (val) => {
+                    console.log('Update Succesful!', val);
+                    setcomments(comments.map( comment => {
+                        if (comment.commentId === commentId) {
+                            comment.content = content;
+                        }
+                        return comment  
+                    }));
+                },
+                // on non-sucessful change
+                (err) => {
+                    console.log('Error, could not update!', err);
+                }
+            );
+        }
+        return editCallBack;
+    }
+
     
     return (
         <div className="commentList">
@@ -109,6 +172,9 @@ function CommentList({postID}) {
                             content={comment.content}
                             username={comment.authorName}
                             timestamp={comment.timestamp}
+                            role={user.role}
+                            deleteCallback={deleteComment(comment.commentId)}
+                            editCallBack={editComment(comment.commentId)}
                         />
                     ))}   
             </div>

@@ -33,11 +33,12 @@ function Assignments(props) {
             values.forEach((assignment)=>{
                 let newAssignment= {};
                 newAssignment.title = assignment.title;
-                let date = new Date(assignment.duedate.seconds * 1000);
-
+                
+                let test = Date.parse(assignment.duedate);
+                let date = new Date(test * 1000);
+      
                 let dueDate = (date.getDate()+
-                  "/"+(date.getMonth()+1)+
-                  "/"+date.getFullYear());
+                  "/"+(date.getMonth()+1)); 
                 newAssignment.duedate = dueDate;
 
 
