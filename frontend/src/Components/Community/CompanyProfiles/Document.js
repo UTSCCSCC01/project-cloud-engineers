@@ -4,7 +4,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 
 import '../../../Styles/Document.css'
 
-function Document({name, url, uploaderId, creatorId}) {
+function Document({name, url, uploaderId, creatorId, deleteCallBack}) {
     
     const userID = JSON.parse(localStorage.user).userID;
     
@@ -21,7 +21,7 @@ function Document({name, url, uploaderId, creatorId}) {
             {/* Only show the delete option if the current user is the creator of the company
             or the uploader!*/}
             { ((userID === uploaderId) || (userID === creatorId)) ?
-                <div className='document_delete_btn'>
+                <div className='document_delete_btn' onClick={deleteCallBack}>
                     <DeleteIcon> </DeleteIcon>            
                 </div>
             :
