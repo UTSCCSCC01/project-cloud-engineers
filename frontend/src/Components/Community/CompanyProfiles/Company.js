@@ -4,7 +4,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DocumentList from './DocumentList';
 
 // Company Info Box.
-function Company({name, mission, companyId, creatorId, editCallback}) {
+function Company({name, mission, creatorId, members, editCallback}) {
     return (
         <div className="company">
 
@@ -18,7 +18,7 @@ function Company({name, mission, companyId, creatorId, editCallback}) {
             </div>
 
             <div className="companies_documents">
-                <DocumentList companyId={companyId} creatorId={creatorId} />
+                <DocumentList creatorId={creatorId} members={members}/>
             </div>
 
             <div className="company__actions">

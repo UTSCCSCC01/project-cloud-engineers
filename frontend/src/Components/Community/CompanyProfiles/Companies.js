@@ -367,7 +367,7 @@ function Companies() {
                 { 
                 company.length !== 0 ?
                     <>
-                        <Company name={company[0].name} mission={company[0].mission} companyId = {company[0].companyId} creatorId= {company[0].creatorId} editCallback={setEditOpen}/>
+                        <Company name={company[0].name} mission={company[0].mission} creatorId= {company[0].creatorId} members={company[0].members} editCallback={setEditOpen}/>
                         {/* Pop up form to edit company. */}
                         <EditCompany open={editOpen} onClose={handleEditClose} initialCompany={company[0].name} initialMission={company[0].mission}/>
                         {/* Pop up form to join another company. */}
