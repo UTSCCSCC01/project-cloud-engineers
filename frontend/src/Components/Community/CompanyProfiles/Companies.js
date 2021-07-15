@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react'
 import Company from './Company';
 import MembersList from './MembersList';
 import RequestList from './RequestList';
-import DocumentList from './DocumentList';
 import '../../../Styles/Companies.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, List, ListItemText} from "@material-ui/core";
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItem, List, ListItemText, Input} from "@material-ui/core";
 import { nanoid } from 'nanoid';
 
 function JoinCompany({onClose, open, userId, update, db}) {
@@ -113,9 +112,22 @@ function EditCompany({onClose, open, initialCompany, initialMission}) {
     // To keep track of the values the user entered.
     const [company, setCompany] = useState(initialCompany);
     const [mission, setMission] = useState(initialMission);
+    const [file, setFile] = useState(null);
+    
+    useEffect(()=> {
+        setFile(null)
+    },[open])
+
+    // When files are chosen.
+    function handleFileChange(e) {
+        if (e.target.files[0]) {
+            setFile(e.target.files[0]);
+        }
+    }
+
 
     return (
-        <Dialog open={open} onClose={() => onClose(company, mission, false)} aria-labelledby="form-dialog-title">
+        <Dialog open={open} onClose={() => onClose(company, mission, file, false)} aria-labelledby="form-dialog-title">
 
             <DialogTitle id="form-dialog-title">Edit Company Info</DialogTitle>
 
@@ -145,13 +157,25 @@ function EditCompany({onClose, open, initialCompany, initialMission}) {
                     fullWidth
                 />
 
+                <br></br>
+                <br></br>
+
+                
+                <DialogContentText>
+                    Add files that can be seen by other company members.
+                </DialogContentText>
+
+                <Input type="file" onChange={handleFileChange}>
+
+                </Input>
+
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={() => onClose(company, mission, false)} color="primary">
+                <Button onClick={() => onClose(company, mission, file, false)} color="primary">
                     Cancel
                 </Button>
-                <Button onClick={ () => onClose(company, mission, true)} color="primary">
+                <Button onClick={ () => onClose(company, mission, file, true)} color="primary">
                     Apply
                 </Button>
             </DialogActions>
@@ -174,6 +198,25 @@ function Companies() {
     const [joinOpen, setJoinOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
     
+
+    // Async function to upload a file to firebase.
+    async function uploadFile(file) {
+        let fileId = nanoid();
+        let fileRef = firebase.storage().ref().child(fileId);
+        await fileRef.put(file);
+        let Url = await fileRef.getDownloadURL();
+        await firebase.firestore().collection('files').doc(fileId).set({
+            fileId: fileId,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            uploaderId: userID,
+            url: Url,
+            name: file.name,
+            type: file.type,
+            // privacy: pri,
+        });
+        console.log('Uploaded file to firebase');
+    }
+
     // Handler for the submitting the form.
     const handleAddClose = (company, mission, flag) => {
         console.log(company, mission, flag)
@@ -208,8 +251,8 @@ function Companies() {
     }
 
     // Handler when editing current field
-    const handleEditClose = (newCompany, newMission, flag) => {
-        console.log(newCompany, newMission, flag);
+    const handleEditClose = (newCompany, newMission, newFile, flag) => {
+        console.log(newCompany, newMission, newFile, flag);
         setEditOpen(false);
         // If the flag is false then user just clicked cancel
         if (!flag) return;
@@ -246,7 +289,10 @@ function Companies() {
                 console.log("Could not update new mission", newMission, ":", val)
             });
         }
-
+        // Add the file to firebase if present
+        if (newFile !== null) {
+            uploadFile(newFile);
+        }
     }
 
     const handleJoinClose = (companyId,creatorId,companyname,flag) => {
@@ -291,7 +337,6 @@ function Companies() {
             .catch((val) => {
                 console.log("Could not join", company, ":", val)
             });
-            console.log(company)
 
             if(company.length != 0){
                 const oldCompany = company[0].companyId;
@@ -314,7 +359,6 @@ function Companies() {
 
     // First determine if the user is in a company.
     if (loading) return (<h1>  Loading </h1>);
-    console.log('Company: ',company);
     return (
         <div className="companies">
             <div className='companies_container'>  
