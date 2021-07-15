@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Company from './Company';
 import MembersList from './MembersList';
 import RequestList from './RequestList';
+import DocumentList from './DocumentList';
 import '../../../Styles/Companies.css'
 import { useFirebase } from "../../Utils/Firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -322,7 +323,7 @@ function Companies() {
                 { 
                 company.length !== 0 ?
                     <>
-                        <Company name={company[0].name} mission={company[0].mission} editCallback={setEditOpen}/>
+                        <Company name={company[0].name} mission={company[0].mission} companyId = {company[0].companyId} creatorId= {company[0].creatorId} editCallback={setEditOpen}/>
                         {/* Pop up form to edit company. */}
                         <EditCompany open={editOpen} onClose={handleEditClose} initialCompany={company[0].name} initialMission={company[0].mission}/>
                         {/* Pop up form to join another company. */}
@@ -362,6 +363,10 @@ function Companies() {
             <div className="companies_requests">
                 {company.length !== 0 ? (userID == company[0].creatorId ? <RequestList/> : null) : null}
             </div>
+
+
+
+
         </div>
     );
 }
