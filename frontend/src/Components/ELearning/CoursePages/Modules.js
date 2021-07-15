@@ -15,6 +15,9 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import { Snackbar } from "@material-ui/core";
+import MuiAlert from '@material-ui/lab/Alert';
+
 
 const useStyles = makeStyles({
   root: {
@@ -25,7 +28,9 @@ const useStyles = makeStyles({
   },
 });
 
-
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 //component for course modules
 function Modules(props) {
@@ -38,7 +43,6 @@ function Modules(props) {
   let db = firebase.firestore();
   const [values, loading, error] = useCollectionDataOnce(db.collection("modules").where('courseId', '==', courseId));
   const [curDisplay, setDisplay] = useState([]);
-
 
 
   async function handleCard(cardId,isAss){
@@ -140,6 +144,8 @@ function MediaCard({curDisplay}) {
   //const classes = useStyles();
   const [fileURL, setFileURL] = useState('');
   const [fileName, setFileName] = useState('');
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [failAlert, setFailAlert] = useState(false);
 
   const firebase = useFirebase();
   let db = firebase.firestore();
@@ -161,7 +167,9 @@ function MediaCard({curDisplay}) {
   // clears file input whenever
   const fileRef = useRef();
   useEffect(() => {
-    fileRef.current.value = '';
+    if (newCard.type == 'assignment') {
+      fileRef.current.value = '';
+    }
   }, [curDisplay, fileURL])
 
   // Downloads media
@@ -176,41 +184,63 @@ function MediaCard({curDisplay}) {
     }
   }
 
-  const updateFirestore = async () => {
+  const updateFirestore = async (file) => {
     await firebase.firestore().collection('submissions').doc(sid).set({
       submissionId: sid,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       userId: uid,
       assignId: newCard.assignmentId,
       url: fileURL,
-      filename: fileName
+      filename: file.name
 
     }, {merge: true})
     .then(
-      (val) => {console.log('firestore updated', val)},
-      (err) => {console.log('firestore update fail')}
-
+      (val) => {
+        console.log('firestore updated', val);
+        setSuccessAlert(true);
+        setFileName(file.name);
+      },
+      (err) => {
+        console.log('firestore update fail');
+        setFailAlert(true);  
+      }
     );
   }
 
   const handleInputChange = async (event) => {
     console.log('here')
     const file = event.target.files[0];
-    await setFileName(file.name);
     console.log({filename: fileName, file: file});
 
     console.log(newCard.assignmentId);
 
     let fileRef = firebase.storage().ref().child('submissions').child(`${newCard.assignmentId}`).child(`${uid}`);
+    let fileUploadSuccessful = null;
+
     await fileRef.put(file)
     .then(
-      (val) => {console.log('file uploaded successfully', val)},
-      (err) => {console.log('upload fail', err)});
-   
-    await setFileURL(fileRef.getDownloadURL());
-    console.log(fileURL);
+      (val) => {
+        console.log('file uploaded successfully', val);
+        fileUploadSuccessful = true;
+      },
+      (err) => {
+        console.log('file upload fail', err);
+        fileUploadSuccessful = false;
+        setFailAlert(true);
 
-    updateFirestore();
+      });
+   
+    await fileRef.getDownloadURL()
+    .then(
+      (url) => setFileURL(url)
+    );
+
+    console.log({fileURL: fileURL});
+
+    if (fileUploadSuccessful) { 
+      updateFirestore(file);
+    }
+
       
   }
 
@@ -221,55 +251,92 @@ function MediaCard({curDisplay}) {
 
   }
 
+  const displaySubmission = () => {
+    
+    if (userSubmission.length) {
+      return (
+      <React.Fragment>
+        <Typography variant="body2" color="textSecondary" component="p">
+          Submitted! <a href={userSubmission[0].url} download>{userSubmission[0].filename}</a>
+        </Typography>
+        
+      </React.Fragment>
+      );
+    }
+
+    else {
+      return (
+        <Typography variant="body2" color="textSecondary" component="p">
+        No Submission
+        </Typography>
+      )
+    }
+        
+      
+  }
+
   // renders assignment card
   const renderAssignment = () => {
-    if(newCard.type == "assignment"){
-        let date = new Date(newCard.duedate.seconds * 1000);
+    let date = new Date(newCard.duedate.seconds * 1000);
 
-        let dueDate = ("Date: "+date.getDate()+
-          "/"+(date.getMonth()+1)+
-          "/"+date.getFullYear());
+    let dueDate = ("Date: "+date.getDate()+
+      "/"+(date.getMonth()+1)+
+      "/"+date.getFullYear());
 
-        return (
-          //<Card className={classes.root}>
-          <Card>
-            <CardActionArea>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {newCard.title}
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  No Submission
-                </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                    {newCard.description}
-                </Typography>
-                <br></br>
-                <Typography color="textSecondary">
-                Due: {dueDate}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small" color="primary" value={newCard.files} onClick={() => {handleDownloads(newCard.files)}} >
-                Download
-              </Button>
-              <input 
-                ref={fileRef}
-                id='fileUpload'
-                type='file'
-                hidden='hidden'
-                onChange={handleInputChange}/>
-              <Button size="small" color="primary" text-align="right" value={newCard.files} onClick={handleSubmission} >
-                New Submission
-              </Button>
+      return (
+        //<Card className={classes.root}>
+        <Card>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                {newCard.title}
+              </Typography>
               
-                  
-            </CardActions>
-          </Card>
-        );
-    }
+              {loading ? (
+                <Typography variant="body2" color="textSecondary" component="p">
+                loading...
+                </Typography>
+                ) : displaySubmission()}
+            
+              <Typography variant="body2" color="textSecondary" component="p">
+                  {newCard.description}
+              </Typography>
+              <br></br>
+              <Typography color="textSecondary">
+              Due: {dueDate}
+              </Typography>
+            </CardContent>
+          <CardActions>
+            <Button size="small" color="primary" value={newCard.files} onClick={() => {handleDownloads(newCard.files)}} >
+              Download
+            </Button>
+            <input 
+              ref={fileRef}
+              id='fileUpload'
+              type='file'
+              hidden='hidden'
+              onChange={handleInputChange}/>
+            <Button size="small" color="primary" text-align="right" value={newCard.files} onClick={handleSubmission} >
+              New Submission
+            </Button>
+
+            <Snackbar open={successAlert} autoHideDuration={1000} onClose={() => setSuccessAlert(false)}>
+                <Alert onClose={() => setSuccessAlert(false)} severity="success">
+                    Update Sucessful!
+                </Alert>
+            </Snackbar>
+
+            <Snackbar open={failAlert} autoHideDuration={1000} onClose={() => setFailAlert(false)}>
+                <Alert onClose={() => setFailAlert(false)} severity="error">
+                    Something went wrong!
+                </Alert>
+            </Snackbar>
+            
+                
+          </CardActions>
+        </Card>
+    );
   }
+  
 
   // renders non assignment card (e.g. video lesson)
   const renderInfo = () => {
