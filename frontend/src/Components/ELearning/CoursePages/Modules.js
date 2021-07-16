@@ -170,7 +170,7 @@ function MediaCard({curDisplay}) {
     if (newCard.type == 'assignment') {
       fileRef.current.value = '';
     }
-  }, [curDisplay, fileURL])
+  }, [curDisplay, fileName])
 
   // Downloads media
   async function handleDownloads(files){
@@ -184,39 +184,17 @@ function MediaCard({curDisplay}) {
     }
   }
 
-  const updateFirestore = async (file) => {
-    await firebase.firestore().collection('submissions').doc(sid).set({
-      submissionId: sid,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      userId: uid,
-      assignId: newCard.assignmentId,
-      url: fileURL,
-      filename: file.name
-
-    }, {merge: true})
-    .then(
-      (val) => {
-        console.log('firestore updated', val);
-        setSuccessAlert(true);
-        setFileName(file.name);
-      },
-      (err) => {
-        console.log('firestore update fail');
-        setFailAlert(true);  
-      }
-    );
-  }
-
+  // Handles assignment upload when file input is changed
   const handleInputChange = async (event) => {
-    console.log('here')
+
     const file = event.target.files[0];
     console.log({filename: fileName, file: file});
 
-    console.log(newCard.assignmentId);
-
+    // creating firebase storage reference to put file
     let fileRef = firebase.storage().ref().child('submissions').child(`${newCard.assignmentId}`).child(`${uid}`);
-    let fileUploadSuccessful = null;
+    let fileUploadSuccessful = null; //ensures database interaction is atomic (firestore is only updated if firebase storage is updated succesfully)
 
+    // put file in firebase storage
     await fileRef.put(file)
     .then(
       (val) => {
@@ -230,27 +208,44 @@ function MediaCard({curDisplay}) {
 
       });
    
-    await fileRef.getDownloadURL()
-    .then(
-      (url) => setFileURL(url)
-    );
-
-    console.log({fileURL: fileURL});
-
-    if (fileUploadSuccessful) { 
-      updateFirestore(file);
-    }
-
+    // update or create new submission document in firestore
+    if (fileUploadSuccessful) {
+      await fileRef.getDownloadURL()
+      .then(
+        (url) => {
+          firebase.firestore().collection('submissions').doc(sid).set({
+            submissionId: sid,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            userId: uid,
+            assignId: newCard.assignmentId,
+            url: url,
+            filename: file.name
       
+          }, {merge: true})
+          .then(
+            (val) => {
+              console.log('firestore updated', val);
+              setSuccessAlert(true);
+              setFileName(file.name);
+            },
+            (err) => {
+              console.log('firestore update fail');
+              setFailAlert(true);  
+            }
+          );
+        }
+      );
+    }
   }
 
-  // Submit Assignment
+  // New Submission button triggers hidden file input
   const handleSubmission = () => { 
     const fileInput = document.getElementById('fileUpload');
     fileInput.click();
 
   }
 
+  // Displays current submission under assingment card if submission exists
   const displaySubmission = () => {
     
     if (userSubmission.length) {
@@ -275,7 +270,7 @@ function MediaCard({curDisplay}) {
       
   }
 
-  // renders assignment card
+  // Renders assignment card
   const renderAssignment = () => {
     let date = new Date(newCard.duedate.seconds * 1000);
 
@@ -338,7 +333,7 @@ function MediaCard({curDisplay}) {
   }
   
 
-  // renders non assignment card (e.g. video lesson)
+  // Renders non assignment card (e.g. video lesson)
   const renderInfo = () => {
       return (
           <Card>
@@ -359,7 +354,7 @@ function MediaCard({curDisplay}) {
         );
   }
 
-  //render card
+  //Render MediaCard Component
   return (
     <React.Fragment>
       {newCard.type === "assignment" ? renderAssignment() : renderInfo()}
