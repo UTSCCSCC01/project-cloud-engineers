@@ -93,17 +93,22 @@ function Assignments(props) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>38</td>
-            <td>23</td>
-            <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + '64' + '/submissions' }>View Submissions</Link></td>
-          </tr>
-          <tr>
+          {values.map((ass) => {
+            return (
+              <tr key={ass.assignmentId}>
+                <td>{ass.title}</td>
+                <td>{ass.duedate}</td>
+                <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + ass.assignmentId + '/submissions'}>View Submissions</Link></td>
+              </tr>
+            )
+          })}
+
+          {/* <tr>
             <td>38</td>
             <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage" title="2016–17 UEFA Champions League">Champions League group stage</a></td>
-            <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + '11' + '/submissions' }>View Submissions</Link></td>
-            {/* <td><a className="button is-primary is-small">View Submissions</a></td> */}
-          </tr>
+            <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + '11' + '/submissions'}>View Submissions</Link></td>
+            <td><a className="button is-primary is-small">View Submissions</a></td>
+          </tr> */}
         </tbody>
       </table>
     )
