@@ -7,6 +7,7 @@ import Modules from './CoursePages/Modules';
 import Assignments from './CoursePages/Assignments';
 import People from './CoursePages/People';
 import CreateAssignment from './CoursePages/CreateAssignment';
+import Submissions from './CoursePages/Submissions';
 import CreateLesson from './CoursePages/CreateLesson';
 import CreateModule from './CoursePages/CreateModule';
 
@@ -127,6 +128,9 @@ function Course(props) {
             </Route>
             <Route path={`${path}/people`}>
                 <People />
+            </Route>
+            <Route path={`${path}/assignments/:assId/submissions`}>
+                <Submissions />
             </Route>
             <Route path={`${path}/assignments`}>
                 <Assignments />
