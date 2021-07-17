@@ -25,7 +25,7 @@ __CLOUD79__ | As a moderator, I want to be able to delete certain posts/comments
 
 ## Team Capacity: 
 
-The total points targeted to be completed by the end of this sprint are 60. We wish to complete 60 points in our next sprint too. Our main focus for the next sprint will be to add the finishing details, ensure that the application is running smoothly, and finishing the remaining 2 stories. 
+The total points targeted to be completed by the end of this sprint are 56. We wish to complete around 50-60 points in our next sprint too. Our main focus for the next sprint will be to add the finishing details, ensure that the application is running smoothly, and finishing the remaining 2 stories. 
 
 ## Spikes:
 
