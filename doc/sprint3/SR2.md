@@ -12,7 +12,6 @@
 
 ### Unfinished tasks:
 - CLOUD-19: As a logged in user i want to add submissions for assignments that i am required to complete
-
 - Initially, we thought we could get around to this task near the end of the sprint. Unfortunately, the other tasks had a lot of dependencies on each other and it took more time to restructure the database, and our initial approach needed to be changed.
 
 ### What are practices that you should continue during the next sprint
@@ -33,10 +32,11 @@
 - Ask the TAs for help.
 - Plan out designs collectively before execution. 
     - There were instances where some members had to change their implementation because the design was not clear.
+- We will do point distribution with more care as some tasks took longer than expected
 
 ### What are (if any) harmful practices you should stop using during the next sprint
 - We started our standups late and committed to our tasks a bit late.
 
-### What was your best/worst experience during sprint 1
+### What was your best/worst experience during sprint 2
 - The best experience was seeing our platform slowly develop into something functional.
 - Worst experience, making sure that all documentation was completed.
