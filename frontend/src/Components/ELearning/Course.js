@@ -8,6 +8,7 @@ import Assignments from './CoursePages/Assignments';
 import People from './CoursePages/People';
 import CreateAssignment from './CoursePages/CreateAssignment';
 import Submissions from './CoursePages/Submissions';
+import GradeSubmission from './CoursePages/GradeSubmission';
 import CreateLesson from './CoursePages/CreateLesson';
 import CreateModule from './CoursePages/CreateModule';
 
@@ -128,6 +129,9 @@ function Course(props) {
             </Route>
             <Route path={`${path}/people`}>
                 <People />
+            </Route>
+            <Route path={`${path}/assignments/:assId/gradesubmission/:subId`}>
+                <GradeSubmission />
             </Route>
             <Route path={`${path}/assignments/:assId/submissions`}>
                 <Submissions />

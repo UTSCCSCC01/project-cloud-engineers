@@ -96,7 +96,7 @@ function Assignments(props) {
           <tr>
             <td>38</td>
             <td>23</td>
-            <td></td>
+            <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + '64' + '/submissions' }>View Submissions</Link></td>
           </tr>
           <tr>
             <td>38</td>
