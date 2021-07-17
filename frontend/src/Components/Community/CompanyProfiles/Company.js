@@ -1,9 +1,10 @@
 import React from 'react'
 import '../../../Styles/Company.css'
 import EditIcon from '@material-ui/icons/Edit';
+import DocumentList from './DocumentList';
 
 // Company Info Box.
-function Company({name, mission, editCallback}) {
+function Company({name, mission, creatorId, members, editCallback}) {
     return (
         <div className="company">
 
@@ -13,7 +14,11 @@ function Company({name, mission, editCallback}) {
 
             <div className="company__content">
                 <h2>Mission</h2>
-                <h3>{mission}</h3>
+                <i>{mission}</i>
+            </div>
+
+            <div className="companies_documents">
+                <DocumentList creatorId={creatorId} members={members}/>
             </div>
 
             <div className="company__actions">

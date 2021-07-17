@@ -6,6 +6,7 @@ import Elearning from '../ELearning/ELearning';
 import Admin from '../Admin/Admin';
 import UserPreferences from '../UserPreferences';
 import Card from '../Utils/Card';
+import Navbar from '../Utils/Navbar';
 import '../../Styles/Home.css';
 
 
@@ -16,6 +17,8 @@ function Home() {
   let { path } = useRouteMatch();
 
   return (
+    <>
+    <Navbar />
     <Switch>
       <Route exact path={path}>
       <div className="home__page">
@@ -71,6 +74,7 @@ function Home() {
       </Route>
 
     </Switch>
+    </>
   );
 }
 export default Home;
