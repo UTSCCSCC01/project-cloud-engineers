@@ -6,9 +6,7 @@ import { useFirebase } from '../../Utils/Firebase';
 //Rows styling template: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/dashboard/Orders.js
 
 function GradeSubmission(props) {
-    let assId = window.location.href.substring(window.location.href.lastIndexOf("/assignments/") + 13, window.location.href.lastIndexOf("/gradesubmission/"));
-    let subId = window.location.href.substring(window.location.href.lastIndexOf("/gradesubmission/") + 17);
-    let { courseId } = useParams();
+    let { courseId, assId, subId } = useParams();
     let firebase = useFirebase();
     let db = firebase.firestore();
     let [formData, setFormData] = useState({ grade: '', comments: '' });
@@ -30,14 +28,6 @@ function GradeSubmission(props) {
             grade: formData.grade,
             comments: formData.comments
           }, {merge: true})
-        // await firebase.firestore().collection('assignments').doc(assId).set({
-        //     ...formData,
-        //     assignmentId: assId,
-        //     courseId: courseId,
-        //     creatorId: user.userID,
-        //     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        //     files: fileIds
-        // });
         setFormData({ grade: '', comments: '' });
     }
 
@@ -46,7 +36,7 @@ function GradeSubmission(props) {
 
     return (
         <div>
-            <p>let instrcutor grade submission {subId} for assignment {assId}  in course {courseId}</p>
+            <p>KAIEN KAEIN let instrcutor grade submission {subId} for assignment {assId}  in course {courseId}</p>
             {values.map((submission) => {
                 return (
                     <div>

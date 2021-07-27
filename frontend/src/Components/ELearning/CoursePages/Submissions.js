@@ -6,8 +6,7 @@ import { useFirebase } from '../../Utils/Firebase';
 //Rows styling template: https://github.com/mui-org/material-ui/blob/master/docs/src/pages/getting-started/templates/dashboard/Orders.js
 
 function Submissions(props) {
-  let assId = window.location.href.substring(window.location.href.lastIndexOf("/assignments/") + 13, window.location.href.lastIndexOf("/submissions"));
-  let { courseId } = useParams();
+  let { courseId, assId } = useParams();
   let firebase = useFirebase();
   let db = firebase.firestore();
 
