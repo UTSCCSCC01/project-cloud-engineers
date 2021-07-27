@@ -45,7 +45,7 @@ function GradeSubmission(props) {
                     <table class="table is-fullwidth">
                         <tbody>
                             <tr>
-                                <th>Time</th>
+                                <th>Submission Time</th>
                                 <td>{values[0].createdAt.seconds}</td>
                             </tr>
                             <tr>

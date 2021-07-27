@@ -37,7 +37,6 @@ function Course(props) {
             <div className="columns">
                 <div className="column is-2 has-text-left">
                     <aside className="menu is-hidden-mobile">
-                        <p className="menu-label">Student</p>
                         <ul className="menu-list">
 
                             <li><a><Link to={`${url}/modules`}>Modules</Link></a></li>

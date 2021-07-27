@@ -8,7 +8,7 @@ function CreateAssignment(props) {
     let { courseId } = useParams();
     let user = JSON.parse(localStorage.getItem("user"));
     const [files, setFiles] = useState([]);
-    let [formData, setFormData] = useState({ title: '', description: '', content:'' });
+    let [formData, setFormData] = useState({ title: '', description: '', content: '' });
     const fileInput = useRef();
 
     let firebase = useFirebase();
@@ -44,7 +44,7 @@ function CreateAssignment(props) {
         return fileId;
     }
 
-    let handleSubmit =  async (e) => {
+    let handleSubmit = async (e) => {
         e.preventDefault();
         // first we deal with the files, list of promises that will resolve to list of fileIds
         let fileIds = await Promise.all(files.map(file => uploadFile(file)));
@@ -60,7 +60,7 @@ function CreateAssignment(props) {
         });
 
         setFiles([]);
-        setFormData({ title: '', description: '', content:'' });
+        setFormData({ title: '', description: '', content: '' });
     }
 
     function fileChange(e) {
@@ -76,13 +76,51 @@ function CreateAssignment(props) {
     }
 
     return (
-        <div>
+        <div className="column is-8 is-offset-1">
+            <h1 className="is-size-4 has-text-left has-text-weight-medium">Create A New Lesson</h1>
             <form onSubmit={handleSubmit}>
-                <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="title" required />
-                <input type="text" name="description" value={formData.description} onChange={handleChange} placeholder="descrip" required />
-                <input type="text" name="content" value={formData.content} onChange={handleChange} placeholder="lesson text" required />
-                <br />
-                <input ref={fileInput} onChange={fileChange} name="attachments" type="file" />
+                
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Title</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                            <input type="text" class="input" name="title" value={formData.title} onChange={handleChange} placeholder="ex Lesson 1 - BEDMAS" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Question</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                            <textarea class="textarea" name="content" value={formData.content} onChange={handleChange} placeholder="Lesson Content" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="file is-boxed">
+                    <label class="file-label">
+                        <input ref={fileInput} class="file-input" onChange={fileChange} name="attachments" type="file" />
+                        <span class="file-cta">
+                            <span class="file-icon">
+                                <i class="fas fa-upload" />
+                            </span>
+                            <span class="file-label">
+                                Add files…
+                            </span>
+                        </span>
+                    </label>
+                </div>
+                <div class="control">
+                    <button class="button is-primary">Create</button>
+                </div>
+
                 <div>
                     <ul>
                         {Array.from(files).map(file => {
@@ -92,11 +130,7 @@ function CreateAssignment(props) {
                         })}
                     </ul>
                 </div>
-
-                <input type="submit" value="Create Lesson" />
-
             </form>
-            <h2>create a new course here in {courseId} course</h2>
         </div>
     )
 }
