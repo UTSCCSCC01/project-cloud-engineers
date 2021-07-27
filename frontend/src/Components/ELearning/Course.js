@@ -11,6 +11,8 @@ import Submissions from './CoursePages/Submissions';
 import GradeSubmission from './CoursePages/GradeSubmission';
 import CreateLesson from './CoursePages/CreateLesson';
 import CreateModule from './CoursePages/CreateModule';
+import Grades from './CoursePages/Grades';
+import ViewGrades from './CoursePages/ViewGrades';
 
 function Course(props) {
     //https://material-ui.com/components/drawers/ Template for drawer component
@@ -41,6 +43,7 @@ function Course(props) {
                             <li><a><Link to={`${url}/modules`}>Modules</Link></a></li>
                             <li><a><Link to={`${url}/assignments`}>Assignments</Link></a></li>
                             <li><a><Link to={`${url}/people`}>People</Link></a></li>
+                            <li><a><Link to={`${url}/grades`}>Grades</Link></a></li>
                         </ul>
                         {user.role === 'instructor' ?
                             <>
@@ -79,8 +82,14 @@ function Course(props) {
                     <Route path={`${path}/people`}>
                         <People />
                     </Route>
+                    <Route path={`${path}/grades`}>
+                        <Grades />
+                    </Route>
                     <Route path={`${path}/assignments/:assId/gradesubmission/:subId`}>
                         <GradeSubmission />
+                    </Route>
+                    <Route path={`${path}/assignments/:assId/viewgrade/:subId`}>
+                        <ViewGrades />
                     </Route>
                     <Route path={`${path}/assignments/:assId/submissions`}>
                         <Submissions />
