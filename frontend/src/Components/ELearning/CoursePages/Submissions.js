@@ -16,9 +16,8 @@ function Submissions(props) {
   if (error) return <p>Error :(</p>;
 
   return (
-    <div>
-      <p>show all submission for assignment {assId} to this instructor in course {courseId}</p>
-      <table class="table">
+    <div className="column is-10">
+      <table class="table  is-fullwidth is-hoverable">
         <thead>
           <tr>
             <th>submitting student id</th>
@@ -38,14 +37,6 @@ function Submissions(props) {
               </tr>
             )
           })}
-
-          {/* <tr>
-            <td>38</td>
-            <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage" title="2016–17 UEFA Champions League">Champions League group stage</a></td>
-            <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + assId + '/gradesubmission/' + '646464'}>Grade Submissions</Link></td>
-            <td><a className="button is-primary is-small">View Submissions</a></td>
-          </tr> */}
-
         </tbody>
       </table>
     </div>

@@ -86,7 +86,7 @@ function People(props) {
     }
       
     return (
-        <div>
+        <div className="column is-10">
             <p>{values[0].title} Class List!</p>
             <List className={classes.root}     style={{
                 position: 'absolute', left: '50%', top: '50%',

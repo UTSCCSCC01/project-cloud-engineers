@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
 import { useParams, Link, useRouteMatch } from 'react-router-dom';
-
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Alert from '@material-ui/lab/Alert';
 import { useFirebase } from '../../Utils/Firebase';
 
 
@@ -16,15 +8,10 @@ import { useFirebase } from '../../Utils/Firebase';
 
 function Assignments(props) {
   let { courseId } = useParams();
-  let { path } = useRouteMatch();
+  let { url } = useRouteMatch();
 
   let user = JSON.parse(localStorage.getItem("user"));
   let [curAss, setAss] = useState([]);
-  const useStyles = makeStyles((theme) => ({
-    seeMore: {
-      marginTop: theme.spacing(3),
-    },
-  }));
   let firebase = useFirebase();
   let db = firebase.firestore();
   const [values, loading, error] = useCollectionDataOnce(db.collection("assignments").where('courseId', '==', courseId));
@@ -55,36 +42,34 @@ function Assignments(props) {
 
   function generateMarkup(markupArray) {
     return (
-      <React.Fragment>
-        <Alert severity="info">Assignment Information!</Alert>
-
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell>Due Date</TableCell>
-              <TableCell>Assignment</TableCell>
-              <TableCell>Grade</TableCell>
-              <TableCell align="right">Weight</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {markupArray.map((ass) => (
-              <TableRow key={ass.assignmentId}>
-                <TableCell>{ass.duedate}</TableCell>
-                <TableCell>{ass.title}</TableCell>
-                <TableCell>N/A</TableCell>
-                <TableCell align="right">N/A</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </React.Fragment>
+      <table class="table is-fullwidth is-hoverable">
+        <thead>
+          <tr>
+            <th>Assignment</th>
+            <th>Deadline</th>
+            <th>Graded</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {values.map((ass) => {
+            return (
+              <tr key={ass.assignmentId}>
+                <td>{ass.title}</td>
+                <td>{ass.duedate}</td>
+                <td>figure this out</td>
+                <td><Link className="navbar-item button is-primary is-small" to={`${url}/${ass.assignmentId}/viewgrade/${'subID'}`}>View Grade - need to figure out how to get submission id for the url</Link></td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
     )
   }
 
   function generateInsMarkup() {
     return (
-      <table class="table">
+      <table class="table is-fullwidth is-hoverable">
         <thead>
           <tr>
             <th>Assignment</th>
@@ -98,23 +83,17 @@ function Assignments(props) {
               <tr key={ass.assignmentId}>
                 <td>{ass.title}</td>
                 <td>{ass.duedate}</td>
-                <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + ass.assignmentId + '/submissions'}>View Submissions</Link></td>
+                <td><Link className="navbar-item button is-primary is-small" to={`${url}/${ass.assignmentId}/submissions`}>View Submissions</Link></td>
               </tr>
             )
           })}
-
-          {/* <tr>
-            <td>38</td>
-            <td>Qualification for the <a href="https://en.wikipedia.org/wiki/2016%E2%80%9317_UEFA_Champions_League#Group_stage" title="2016–17 UEFA Champions League">Champions League group stage</a></td>
-            <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + '11' + '/submissions'}>View Submissions</Link></td>
-            <td><a className="button is-primary is-small">View Submissions</a></td>
-          </tr> */}
         </tbody>
       </table>
     )
   }
+
   return (
-    <div>
+    <div className="column is-10">
       {user.role === 'instructor' ?
         generateInsMarkup() : generateMarkup(curAss)
       }
