@@ -122,7 +122,20 @@ function CreateAssignment(props) {
                         </div>
                     </div>
                 </div>
-                <div class="file is-boxed">
+                <div class="columns">
+                    <h1 className="is-size-6 column is-2 has-text-left has-text-weight-medium">Attached Files</h1>
+                    <div class="column is-10 level">
+                        {Array.from(files).map(file => {
+                            return (
+                                <span class="tag is-medium m-1" id={file.name}>
+                                    {file.name}
+                                    <button class="delete is-small" onClick={fileDelete} id={file.name}></button>
+                                </span>
+                            )
+                        })}
+                    </div>
+                </div>
+                <div class="file">
                     <label class="file-label">
                         <input ref={fileInput} class="file-input" onChange={fileChange} name="attachments" type="file" />
                         <span class="file-cta">
@@ -138,17 +151,6 @@ function CreateAssignment(props) {
                 <div class="control">
                     <button class="button is-primary">Create</button>
                 </div>
-
-                <div>
-                    <ul>
-                        {Array.from(files).map(file => {
-                            return (
-                                <li>{file.name} <a id={file.name} href='#' onClick={fileDelete}>remove file</a></li>
-                            )
-                        })}
-                    </ul>
-                </div>
-
             </form>
         </div>
     )
