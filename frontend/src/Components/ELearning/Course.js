@@ -11,7 +11,7 @@ import Submissions from './CoursePages/Submissions';
 import GradeSubmission from './CoursePages/GradeSubmission';
 import CreateLesson from './CoursePages/CreateLesson';
 import CreateModule from './CoursePages/CreateModule';
-import Grades from './CoursePages/Grades';
+import GradesSummary from './CoursePages/GradesSummary';
 import ViewGrades from './CoursePages/ViewGrades';
 
 function Course(props) {
@@ -47,7 +47,6 @@ function Course(props) {
                             <>
                                 <p className="menu-label">Instructor</p>
                                 <ul className="menu-list">
-                                    <li><a><Link to={`${url}/grades`}>Grades</Link></a></li>
                                     <li><a><Link to={`${url}/create-assignment`}>Create New Assignment</Link></a></li>
                                     <li><a><Link to={`${url}/create-lesson`}>Create New Lesson</Link></a></li>
                                     <li><a><Link to={`${url}/create-module`}>Create Module</Link></a></li>
@@ -81,17 +80,14 @@ function Course(props) {
                     <Route path={`${path}/people`}>
                         <People />
                     </Route>
-                    <Route path={`${path}/grades/:assId/viewgrade/:subId`}>
-                        <ViewGrades />
-                    </Route>
-                    <Route path={`${path}/grades`}>
-                        <Grades />
-                    </Route>
                     <Route path={`${path}/assignments/:assId/gradesubmission/:subId`}>
                         <GradeSubmission />
                     </Route>
                     <Route path={`${path}/assignments/:assId/submissions`}>
                         <Submissions />
+                    </Route>
+                    <Route path={`${path}/assignments/:assId/gradessummary`}>
+                        <GradesSummary />
                     </Route>
                     <Route path={`${path}/assignments`}>
                         <Assignments />

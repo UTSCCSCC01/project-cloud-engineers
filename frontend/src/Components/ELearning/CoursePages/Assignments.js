@@ -75,6 +75,7 @@ function Assignments(props) {
             <th>Assignment</th>
             <th>Deadline</th>
             <th></th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -84,6 +85,7 @@ function Assignments(props) {
                 <td>{ass.title}</td>
                 <td>{ass.duedate}</td>
                 <td><Link className="navbar-item button is-primary is-small" to={`${url}/${ass.assignmentId}/submissions`}>View Submissions</Link></td>
+                <td><Link className="navbar-item button is-primary is-small" to={`${url}/${ass.assignmentId}/gradessummary`}>Grades Summary</Link></td>
               </tr>
             )
           })}
