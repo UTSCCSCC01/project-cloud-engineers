@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { useParams, Link, useRouteMatch } from 'react-router-dom';
 import { useFirebase } from '../../Utils/Firebase';
 
@@ -11,7 +11,7 @@ function GradeSubmission(props) {
     let db = firebase.firestore();
     let [formData, setFormData] = useState({ grade: '', comments: '' });
 
-    const [values, loading, error] = useCollectionDataOnce(db.collection("submissions").where('submissionId', '==', subId));
+    const [values, loading, error] = useCollectionData(db.collection("submissions").where('submissionId', '==', subId));
 
     let handleChange = (e) => {
         setFormData((old) => {
@@ -25,8 +25,8 @@ function GradeSubmission(props) {
     let handleSubmit = async (e) => {
         e.preventDefault();
         await firebase.firestore().collection('submissions').doc(subId).set({
-            grade: formData.grade,
-            comments: formData.comments
+            grade: formData.grade || values[0].grade,
+            comments: formData.comments || values[0].comments
         }, { merge: true })
         setFormData({ grade: '', comments: '' });
     }
@@ -72,7 +72,7 @@ function GradeSubmission(props) {
                         </div>
                         <div class="field">
                             <div class="control has-icons-right">
-                                <textarea class="textarea" name="comments" value={formData.comments} onChange={handleChange} placeholder="Enter Feedback" required />
+                                <textarea class="textarea" name="comments" value={formData.comments} onChange={handleChange} placeholder="Enter Feedback" />
                                 <span class="icon is-right">
                                     <i class="fas fa-envelope" />
                                 </span>

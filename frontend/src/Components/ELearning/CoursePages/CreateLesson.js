@@ -94,7 +94,7 @@ function CreateAssignment(props) {
                 </div>
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">Question</label>
+                        <label class="label">Content</label>
                     </div>
                     <div class="field-body">
                         <div class="field">

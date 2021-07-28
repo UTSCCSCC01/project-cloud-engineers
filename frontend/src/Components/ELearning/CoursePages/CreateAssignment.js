@@ -105,15 +105,18 @@ function CreateAssignment(props) {
                             <div class="control has-icons-left">
                                 <input class="input" type="datetime-local" name="duedate" value={formData.duedate} onChange={handleChange} />
                                 <span class="icon is-small is-left">
-                                    <i class="fas fa-user" />
+                                    <i class="fas fa-calendar-check" />
                                 </span>
                             </div>
                             <p class="help">Initial Due Date</p>
                         </div>
                         <div class="field">
                             <label class="label">Expiry Date</label>
-                            <div class="control">
+                            <div class="control has-icons-left">
                                 <input class="input" type="datetime-local" name="expiry" value={formData.expiry} onChange={handleChange} />
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-calendar-times" />
+                                </span>
                             </div>
                             <p class="help">Late Submissions Acceptance Date</p>
                         </div>
