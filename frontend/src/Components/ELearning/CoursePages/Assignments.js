@@ -15,6 +15,7 @@ function Assignments(props) {
   let firebase = useFirebase();
   let db = firebase.firestore();
   const [values, loading, error] = useCollectionDataOnce(db.collection("assignments").where('courseId', '==', courseId));
+  const [usubs, l, e] = useCollectionDataOnce(db.collection("submissions").where('userId', '==', user.userID));
 
 
   useEffect(() => {
@@ -38,7 +39,23 @@ function Assignments(props) {
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+  if (l) return <p>Loading...</p>;
+  if (e) return <p>Error :(</p>;
 
+    function graded(ass){
+      let a = usubs.find(e => e.assignId === ass.assignmentId);
+      console.log(usubs);
+      console.log(ass);
+      if (a && a.grade) {
+        return true;
+      } else {
+        return false
+      }
+    }
+
+    function submitted(ass){
+      return usubs.some(e => e.assignId === ass.assignmentId);
+    }
 
   function generateMarkup(markupArray) {
     return (
@@ -47,7 +64,7 @@ function Assignments(props) {
           <tr>
             <th>Assignment</th>
             <th>Deadline</th>
-            <th>Graded</th>
+            <th>Grading</th>
             <th></th>
           </tr>
         </thead>
@@ -57,8 +74,11 @@ function Assignments(props) {
               <tr key={ass.assignmentId}>
                 <td>{ass.title}</td>
                 <td>{ass.duedate}</td>
-                <td>figure this out</td>
-                <td><Link className="navbar-item button is-primary is-small" to={`${url}/${ass.assignmentId}/viewgrade/${'subID'}`}>View Grade - need to figure out how to get submission id for the url</Link></td>
+                <td>{ submitted(ass) ? ( graded(ass) ? <span>Completed</span> : <span>Pending</span>) : <span>Not Submitted</span>}</td>
+                <td>{submitted(ass) && graded(ass) ? 
+                      <Link className="navbar-item button is-primary is-small" to={`${url}/${ass.assignmentId}/gradesubmission/${ass.assignmentId}_${user.userID}`}>View Grade</Link>
+                      : <button class="button" title="Disabled button" disabled>View Grade</button>}
+                </td>
               </tr>
             )
           })}

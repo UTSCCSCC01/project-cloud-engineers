@@ -7,6 +7,7 @@ import { useFirebase } from '../../Utils/Firebase';
 
 function Submissions(props) {
   let { courseId, assId } = useParams();
+  let { url } = useRouteMatch();
   let firebase = useFirebase();
   let db = firebase.firestore();
 
@@ -33,7 +34,7 @@ function Submissions(props) {
                 <td>{sub.userId}</td>
                 <td>{sub.submissionId}</td>
                 <td>{sub.createdAt.seconds}</td>
-                <td><Link className="navbar-item button is-primary is-small" to={'/home/e-learning/' + courseId + '/assignments/' + assId + '/gradesubmission/' + sub.submissionId}>Grade Submission</Link></td>
+                <td><Link className="navbar-item button is-primary is-small" to={`${url.replace('submissions', 'gradesubmission')}/${sub.submissionId}`}>Grade Submission</Link></td>
               </tr>
             )
           })}

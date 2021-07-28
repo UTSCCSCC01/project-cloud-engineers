@@ -7,6 +7,7 @@ import { useFirebase } from '../../Utils/Firebase';
 
 function GradeSubmission(props) {
     let { courseId, assId, subId } = useParams();
+    let user = JSON.parse(localStorage.getItem("user"));
     let firebase = useFirebase();
     let db = firebase.firestore();
     let [formData, setFormData] = useState({ grade: '', comments: '' });
@@ -60,28 +61,32 @@ function GradeSubmission(props) {
                         </tbody>
                     </table>
 
-                    <h1>Update Grades</h1>
-                    <form onSubmit={handleSubmit}>
-                        <div class="field">
-                            <div class="control has-icons-left">
-                                <input class="input" type="text" name="grade" value={formData.grade} onChange={handleChange} placeholder="New Grade" required />
-                                <span class="icon is-left">
-                                    <i class="fas fa-calculator" />
-                                </span>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control has-icons-right">
-                                <textarea class="textarea" name="comments" value={formData.comments} onChange={handleChange} placeholder="Enter Feedback" />
-                                <span class="icon is-right">
-                                    <i class="fas fa-envelope" />
-                                </span>
-                            </div>
-                        </div>
-                        <div class="control">
-                            <button class="button is-primary">Submit</button>
-                        </div>
-                    </form>
+                    {user.role === 'instructor' ?
+                        <>
+                            <h1>Update Grades</h1>
+                            <form onSubmit={handleSubmit}>
+                                <div class="field">
+                                    <div class="control has-icons-left">
+                                        <input class="input" type="text" name="grade" value={formData.grade} onChange={handleChange} placeholder="New Grade" required />
+                                        <span class="icon is-left">
+                                            <i class="fas fa-calculator" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control has-icons-right">
+                                        <textarea class="textarea" name="comments" value={formData.comments} onChange={handleChange} placeholder="Enter Feedback" />
+                                        <span class="icon is-right">
+                                            <i class="fas fa-envelope" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="control">
+                                    <button class="button is-primary">Submit</button>
+                                </div>
+                            </form>
+                        </> : true
+                    }
                 </div>
             </div>
         </div>
