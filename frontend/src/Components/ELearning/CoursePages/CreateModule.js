@@ -85,6 +85,7 @@ function CreateAssignment(props) {
 
     return (
         <div className="column is-10 columns is-multiline is-centered">
+            <h1 className="is-size-4 has-text-left has-text-weight-medium column is-full">Create A New Module</h1>
             <div className="column is-7">
                 <form id="mod" onSubmit={handleSubmit}>
                     <div class="field is-horizontal">

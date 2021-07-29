@@ -47,7 +47,7 @@ function GradeSubmission(props) {
                         <tbody>
                             <tr>
                                 <th>Submission Time</th>
-                                <td>{values[0].createdAt.seconds}</td>
+                                <td>{values[0].createdAt}</td>
                             </tr>
                             <tr>
                                 <th>Grade</th>
