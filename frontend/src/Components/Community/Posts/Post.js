@@ -23,7 +23,10 @@ function Post({content, username, role, timestamp, media, postId, deleteCallBack
     const [likeCount, setlikeCount] = useState(-1)
     
     //Format date to meaningful string.
-    let timeToString = new Date(timestamp.seconds * 1000).toDateString() + ' at ' + new Date(timestamp.seconds * 1000).toLocaleTimeString()
+    let timeToString = '';
+    if (timestamp !== null) {
+        timeToString = new Date(timestamp.seconds * 1000).toDateString() + ' at ' + new Date(timestamp.seconds * 1000).toLocaleTimeString()
+    }
 
     const handleEdit = (e) => {
         e.preventDefault();
@@ -102,7 +105,7 @@ function Post({content, username, role, timestamp, media, postId, deleteCallBack
                 <Avatar className="avatar">{username.charAt(0).toUpperCase()}</Avatar>
                 <h3>
                     {username}
-                    <span className="post__timestamp">  {timeToString}</span>
+                    <span className="post__timestamp">  { (timeToString === "" ? <></> : timeToString)}</span>
                 </h3>
                 
                 {/* Only show the delete option to moderators and admins */}
