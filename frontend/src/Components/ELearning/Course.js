@@ -12,7 +12,6 @@ import GradeSubmission from './CoursePages/GradeSubmission';
 import CreateLesson from './CoursePages/CreateLesson';
 import CreateModule from './CoursePages/CreateModule';
 import GradesSummary from './CoursePages/GradesSummary';
-import ViewGrades from './CoursePages/ViewGrades';
 
 function Course(props) {
     //https://material-ui.com/components/drawers/ Template for drawer component
