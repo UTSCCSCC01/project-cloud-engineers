@@ -23,9 +23,10 @@ function useAuthProvider() {
   const signUp = (details, cb) => {
     return axios.post('http://localhost:8080/register', details)
       .then((response) => {
-        cb();
+        cb(true);
       })
       .catch((error) => {
+        cb(false);
         console.error(error);
       });
   };
@@ -39,9 +40,10 @@ function useAuthProvider() {
         // store the JWT and user in localStorage
         localStorage.setItem("authToken", response.data.authToken);
         localStorage.setItem("user", JSON.stringify(user));
-        cb();
+        cb(true);
       })
       .catch((error) => {
+        cb(false)
         console.error(error);
       });
   }

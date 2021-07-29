@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from "@material-ui/core/Snackbar"
 
 function Copyright() {
   return (
@@ -24,6 +26,10 @@ function Copyright() {
       {'.'}
     </Typography>
   );
+}
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +59,31 @@ function Login(props) {
   let history = useHistory();
   let auth = useAuth();
 
+  const [successAlert, setSuccessAlert] = useState(false);
+  const [failAlert, setFailAlert] = useState(false);
+  const [infoAlert, setInfoAlert] = useState(false);
+
+  const handleClose = (event, reason, type) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    
+    switch (type) {
+        case 0:
+            setSuccessAlert(false);      
+            break;          
+        case 1:
+            setFailAlert(false);
+            break;
+        case 2:
+            setInfoAlert(false);
+            break;
+        default:
+            break;
+    }
+    setSuccessAlert(false);
+};
+
   function handleFormChange(e) {
     let newState = {
       ...form,
@@ -63,7 +94,17 @@ function Login(props) {
 
   function handleFormSubmit(e) {
     e.preventDefault();
-    auth.signIn(form, () => {
+
+    if ((form.email === "") || (form.password === "")) {
+      setInfoAlert(true);
+      return;
+    }
+
+    auth.signIn(form, (flag) => {
+      if (!flag) {
+        setFailAlert(true);
+        return;
+      }
       history.push('/home');
     });
     updateForm({ email: "", password: "" });
@@ -118,7 +159,7 @@ function Login(props) {
             Login
           </Button>
           <Grid container>
-            <Grid item style={{display:'flex', justifyContent:'center'}} >
+            <Grid item style={{margin:'auto'}}>
               <Link to={`/register`}>Don't have an account? Sign Up</Link>
             </Grid>
           </Grid>
@@ -127,6 +168,26 @@ function Login(props) {
       <Box mt={8}>
         <Copyright />
       </Box>
+
+      <Snackbar open={successAlert} autoHideDuration={1000} onClose={(event, reason) => handleClose(event, reason, 0)}>
+        <Alert onClose={(event, reason) => handleClose(event, reason, 0)} severity="success">
+            Logged in!
+        </Alert>
+      </Snackbar>
+
+      <Snackbar open={failAlert} autoHideDuration={1000} onClose={(event, reason) => handleClose(event, reason, 1)}>
+          <Alert onClose={(event, reason) => handleClose(event, reason, 1)} severity="error">
+              Incorrect username/password combination! 
+          </Alert>
+      </Snackbar>
+
+      <Snackbar open={infoAlert} autoHideDuration={1000} onClose={(event, reason) => handleClose(event, reason, 2)}>
+          <Alert onClose={(event, reason) => handleClose(event, reason, 2)} severity="info">
+              Fields are empty! 
+          </Alert>
+      </Snackbar>
+
+
     </Container>
   );
 }
