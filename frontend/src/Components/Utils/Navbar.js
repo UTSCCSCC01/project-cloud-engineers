@@ -1,6 +1,8 @@
 import React from "react";
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
 import { useAuth } from './Auth';
+import Tooltip from '@material-ui/core/Tooltip';
+import "../../Styles/Navbar.css";
 
 function Home(props) {
     let { path, url } = useRouteMatch();
@@ -8,7 +10,51 @@ function Home(props) {
     let auth = useAuth();
     let user = JSON.parse(localStorage.getItem("user"));
 
+    // return (
+    //     <nav className='navbar-nav'>
+    //         <ul className="navbar-list">
+
+    //             <li className='navbar-item navbar-brand'>
+    //                 <Link className="navbar-item" to={`/`}>
+    //                     <img src="https://dslv9ilpbe7p1.cloudfront.net/Ln9SnKBLyrz_YNr7I_bH8g_store_logo_image.png" width="150" height="60" />
+    //                 </Link>
+    //             </li>
+    
+
+    //             <li className='navbar-item'>
+    //                 <a href='#' className="navbar-link">
+    //                     <i className="fas fa-home"></i>
+    //                     <span className="navbar-text">Home</span>
+    //                 </a>
+    //             </li>
+
+    //             <li className='navbar-item'>
+    //                 <a href='#' className="navbar-link">
+    //                     <i className="fas fa-users"></i>
+    //                     <span className="navbar-text">Community</span>
+    //                 </a>
+    //             </li>
+
+    //             <li className='navbar-item'>
+    //                 <a href='#' className="navbar-link">
+    //                     <i className="fas fa-lightbulb"></i>
+    //                     <span className="navbar-text">E-Learning</span>
+    //                 </a>
+    //             </li>
+
+    //             <li className='navbar-item last-child'>
+    //             <a href='#' className="navbar-link">
+    //                     <i className="fas fa-user-cog"></i>
+    //                 </a>
+    //             </li>
+
+    //         </ul>
+    //     </nav>
+    // );
+
+     
     return (
+
         <nav className="navbar is-transparent" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
                 <Link className="navbar-item" to={`/`}>
@@ -40,6 +86,17 @@ function Home(props) {
                 )}
 
                 <div className="navbar-end">
+                    <div className="navbar-item">
+                        {auth.user ? (
+                            <Tooltip title='Update Profile' placement='left'>
+                                <Link className='navbar-item' to={'/home/user-preferences'}>
+                                    <i className="fas fa-user-cog"></i>
+                                </Link>
+                            </Tooltip>
+                            
+                        ) : (<></>)}
+                    </div>
+
                     <div className="navbar-item">
                         {auth.user ? (
                             <div className="buttons">
