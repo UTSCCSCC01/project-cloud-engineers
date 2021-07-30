@@ -17,12 +17,12 @@ function CreateCourse(props) {
             ...formData,
             courseId: courseId
         })
-        .then((docRef) => {
-            history.push('/home/e-learning');
-        })
-        .catch((error) => {
-            console.log("Error:",error)
-        });
+            .then((docRef) => {
+                history.push('/home/e-learning');
+            })
+            .catch((error) => {
+                console.log("Error:", error)
+            });
 
         setFormData({ title: '', description: '' });
     }
@@ -38,13 +38,40 @@ function CreateCourse(props) {
 
 
     return (
-        <div>
+        <div className="column is-8 is-offset-1">
+            <h1 className="is-size-4 has-text-left has-text-weight-medium">Create A New Course</h1>
             <form onSubmit={handleSubmit}>
-                title: <input type="text" name="title" onChange={handleChange} value={formData.title} />
-                description: <input type="text" name="description" onChange={handleChange} value={formData.description} />
-                <input type="submit" value="Create new course" />
+
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Title</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="text" class="input" name="title" value={formData.title} onChange={handleChange} placeholder="ex. Pre-Incubation" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">Question</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <textarea class="textarea" name="description" value={formData.description} onChange={handleChange} placeholder="This course is about ..." required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="control">
+                    <button class="button is-primary">Create</button>
+                </div>
+
             </form>
-            <h2>form here that will create a new course eh?</h2>
+
         </div>
     )
 }

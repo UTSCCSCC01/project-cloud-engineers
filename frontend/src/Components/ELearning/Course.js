@@ -11,145 +11,97 @@ import Submissions from './CoursePages/Submissions';
 import GradeSubmission from './CoursePages/GradeSubmission';
 import CreateLesson from './CoursePages/CreateLesson';
 import CreateModule from './CoursePages/CreateModule';
-
-
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
+import GradesSummary from './CoursePages/GradesSummary';
 
 function Course(props) {
     //https://material-ui.com/components/drawers/ Template for drawer component
     let { courseId } = useParams();
-    let { path } = useRouteMatch();
+    let { path, url } = useRouteMatch();
     const drawerWidth = 240;
 
     let user = JSON.parse(localStorage.getItem("user"));
-    
+
     let firebase = useFirebase();
     let db = firebase.firestore();
     const [values, loading, error] = useCollectionDataOnce(db.collection("courses").where('courseId', '==', courseId));
-
-    const useStyles = makeStyles((theme) => ({
-        root: {
-            display: 'flex',
-        },
-        appBar: {
-            zIndex: theme.zIndex.drawer + 1,
-        },
-        drawer: {
-            width: drawerWidth,
-            flexShrink: 0,
-        },
-        drawerPaper: {
-            width: drawerWidth,
-        },
-        drawerContainer: {
-            overflow: 'auto',
-        },
-        content: {
-            flexGrow: 1,
-            padding: theme.spacing(3),
-        },
-        }));
-
-    const classes = useStyles();
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
     return (
-        <Switch>
-            <Route exact path={path}>
-                <div>
-                    <div className={classes.root}>
-                        <CssBaseline />
-                        <AppBar position="fixed" className={classes.appBar}>
-                            <Toolbar>
-                            <Typography variant="h6" noWrap>
-                                E-Learning
-                            </Typography>
-                            </Toolbar>
-                        </AppBar>
-                        <Drawer
-                            className={classes.drawer}
-                            variant="permanent"
-                            classes={{
-                            paper: classes.drawerPaper,
-                            }}
-                        >
-                            <Toolbar />
-                            <div className={classes.drawerContainer}>
-                            <List>
-                                <ListItem button>
-                                    <Link className="App-link" to={'/home/e-learning'}>Back to E-Learning</Link>
-                                </ListItem>
-                            </List>
-                            <Divider />
-                            <List>
-                                <ListItem button>
-                                    <Link to={`${courseId}/modules`}>Modules</Link>
-                                </ListItem>
-                                <ListItem button>
-                                    <Link to={`${courseId}/assignments`}>Assignments</Link>
-                                </ListItem>
-                                <ListItem button>
-                                    <Link to={`${courseId}/people`}>People</Link>
-                                </ListItem>
-                            </List>
-                            </div>
-                        </Drawer>
-                        <main className={classes.content}>
-                            <Toolbar />
-                            <Typography variant="h3">Welcome to {values[0].title}</Typography>
-                            <br></br>
-                            <Typography variant="h6">{values[0].description}</Typography>
 
-                        </main>
-                    </div>
 
-                    { user.role === 'instructor' ? 
-                    <div>
-                        <Link to={`${courseId}/create-assignment`}>Create New Assignment</Link>
-                        <br />
-                        <Link to={`${courseId}/create-lesson`}>Create New Lesson</Link>
-                        <br />
-                        <Link to={`${courseId}/create-module`}>Create Module</Link>
-                    </div> : true
-                    }
+
+        <div className="container">
+            <div className="columns">
+                <div className="column is-2 has-text-left">
+                    <aside className="menu is-hidden-mobile">
+                        <ul className="menu-list">
+
+                            <li><a><Link to={`${url}/modules`}>Modules</Link></a></li>
+                            <li><a><Link to={`${url}/assignments`}>Assignments</Link></a></li>
+                            <li><a><Link to={`${url}/people`}>People</Link></a></li>
+                        </ul>
+                        {user.role === 'instructor' ?
+                            <>
+                                <p className="menu-label">Instructor</p>
+                                <ul className="menu-list">
+                                    <li><a><Link to={`${url}/create-assignment`}>Create New Assignment</Link></a></li>
+                                    <li><a><Link to={`${url}/create-lesson`}>Create New Lesson</Link></a></li>
+                                    <li><a><Link to={`${url}/create-module`}>Create Module</Link></a></li>
+                                </ul>
+                            </>
+                            : true
+                        }
+
+                    </aside>
                 </div>
-            </Route>
-            <Route path={`${path}/modules`}>
-                <Modules />
-            </Route>
-            <Route path={`${path}/people`}>
-                <People />
-            </Route>
-            <Route path={`${path}/assignments/:assId/gradesubmission/:subId`}>
-                <GradeSubmission />
-            </Route>
-            <Route path={`${path}/assignments/:assId/submissions`}>
-                <Submissions />
-            </Route>
-            <Route path={`${path}/assignments`}>
-                <Assignments />
-            </Route>
-            <Route path={`${path}/create-assignment`}>
-                <CreateAssignment />
-            </Route>
-            <Route path={`${path}/create-lesson`}>
-                <CreateLesson />
-            </Route>
-            <Route path={`${path}/create-module`}>
-                <CreateModule />
-            </Route>
 
-        </Switch>
+                <Switch>
+                    <Route exact path={path}>
+                        <div className="column is-10 has-text-centered">
+                            {user.role === 'instructor' ?
+                                <div>
+                                    Home page view for instrcutor
+                                    <Link to={`${courseId}/create-assignment`}>Create New Assignment</Link>
+                                    <br />
+                                    <Link to={`${courseId}/create-lesson`}>Create New Lesson</Link>
+                                    <br />
+                                    <Link to={`${courseId}/create-module`}>Create Module</Link>
+                                </div> : <div>home page view for student</div>
+                            }
+                        </div>
+                    </Route>
+                    <Route path={`${path}/modules`}>
+                        <Modules />
+                    </Route>
+                    <Route path={`${path}/people`}>
+                        <People />
+                    </Route>
+                    <Route path={`${path}/assignments/:assId/gradesubmission/:subId`}>
+                        <GradeSubmission />
+                    </Route>
+                    <Route path={`${path}/assignments/:assId/submissions`}>
+                        <Submissions />
+                    </Route>
+                    <Route path={`${path}/assignments/:assId/gradessummary`}>
+                        <GradesSummary />
+                    </Route>
+                    <Route path={`${path}/assignments`}>
+                        <Assignments />
+                    </Route>
+                    <Route path={`${path}/create-assignment`}>
+                        <CreateAssignment />
+                    </Route>
+                    <Route path={`${path}/create-lesson`}>
+                        <CreateLesson />
+                    </Route>
+                    <Route path={`${path}/create-module`}>
+                        <CreateModule />
+                    </Route>
+                </Switch>
+            </div>
+        </div>
 
     )
 }

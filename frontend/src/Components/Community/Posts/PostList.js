@@ -79,7 +79,7 @@ function PostList() {
             content: caption,
             authorId: user.userID,
             authorName: user.username,
-            likes: 0,
+            likes: [],
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
             privacy: 'public',
             attachments:[],
