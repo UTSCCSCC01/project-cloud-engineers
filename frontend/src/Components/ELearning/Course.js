@@ -57,7 +57,6 @@ function Course(props) {
                     </aside>
                 </div>
 
-
                 <Switch>
                     <Route exact path={path}>
                         <div className="column is-10 has-text-centered">
