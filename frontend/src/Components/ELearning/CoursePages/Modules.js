@@ -215,7 +215,7 @@ function MediaCard({curDisplay}) {
         (url) => {
           firebase.firestore().collection('submissions').doc(sid).set({
             submissionId: sid,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: (new Date()).toISOString(),
             userId: uid,
             assignId: newCard.assignmentId,
             url: url,
@@ -362,8 +362,5 @@ function MediaCard({curDisplay}) {
     
   )
 }
-
-  
-
 
 export default Modules;
