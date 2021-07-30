@@ -20,14 +20,7 @@ function Navbar() {
                     fontSize='large'
                 ></SupervisorAccountIcon>
             </div>
-            <div 
-                className="navbar__chatIcon"
-                onClick={() => history.push(`${path}/chat`)}
-            >
-                <ChatIcon
-                    fontSize='large'
-                ></ChatIcon>
-            </div>
+
             <div 
                 onClick={() => history.push(`${path}/companies`)}
                 className="navbar__businessIcon"

@@ -66,61 +66,105 @@ function CreateAssignment(props) {
     }
 
     function handleAdd(e) {
+        let a = {
+            id: e.currentTarget.getAttribute('id'),
+            type: e.currentTarget.getAttribute('data-type'),
+            title: e.currentTarget.getAttribute('data-title'),
+        }
         setModItems(old => {
-            return ([...old, {
-                id: e.target.id,
-                type: e.target.getAttribute('data-type'),
-                title: e.target.getAttribute('data-title'),
-            }])
+            return ([...old, a])
         });
     }
 
     function handleDelete(e) {
+        let t = e.currentTarget.id;
         setModItems(old => {
-            return modItems.filter(item => item.id !== e.target.id);
+            return modItems.filter(item => item.id !== t);
         })
     }
 
     return (
-        <div>
-            <form onSubmit={handleSubmit}>
-                <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="title" required />
-                <p>module items:</p>
-                <ul>
-                    {modItems.map((item) => {
-                        return (
-                            <li id={item.id}>
-                                {item.title} -- {item.type} --
-                                <a href="#" id={item.id} data-title={item.title} data-type={item.type} onClick={handleDelete}>delete from module</a>
-                            </li>
-                        )
-                    })
-                    }
-                </ul>
-
-                <input type="submit" value="Create Module" />
-
-
-                <ul>
-                    {allItems.filter((item) => {
-                        return (!(modItems.map(item => item.id).includes(item.id)))
-                    }).map((item) => {
-                        return (
-                            <li id={item.id}>
-                                {item.title} -- {item.type} --
-                                <a href="#" id={item.id} data-title={item.title} data-type={item.type}  onClick={handleAdd}>add to module</a>
-                            </li>
-                        )
-                    })
-                    }
-                </ul>
-
-
-
-                
-
-            </form>
-            <h2>create a new mod here in {courseId} course</h2>
+        <div className="column is-10 columns is-multiline is-centered">
+            <h1 className="is-size-4 has-text-left has-text-weight-medium column is-full">Create A New Module</h1>
+            <div className="column is-7">
+                <form id="mod" onSubmit={handleSubmit}>
+                    <div class="field is-horizontal">
+                        <div class="field-label is-normal">
+                            <label class="label">Title</label>
+                        </div>
+                        <div class="field-body">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input" type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Enter a Module Name" required />
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div className="column is-half">
+                <table class="table  is-fullwidth is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Course Items</th>
+                            <th>Item Type</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {allItems.filter((item) => {
+                            return (!(modItems.map(item => item.id).includes(item.id)))
+                        }).map((item) => {
+                            return (
+                                <tr id={item.id}>
+                                    <td>{item.title}</td>
+                                    <td>{item.type}</td>
+                                    <td>
+                                        <button class="button is-success is-outlined" id={item.id} data-title={item.title} data-type={item.type} onClick={handleAdd}>
+                                            <span>Add</span>
+                                            <span class="icon is-small">
+                                                <i class="fas fa-plus"></i>
+                                            </span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div className="column is-half">
+                <table class="table  is-fullwidth is-hoverable">
+                    <thead>
+                        <tr>
+                            <th>Module Item</th>
+                            <th>Item Type</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {modItems.map((item) => {
+                            return (
+                                <tr id={item.id}>
+                                    <td>{item.title}</td>
+                                    <td>{item.type}</td>
+                                    <td>
+                                        <button class="button is-danger is-outlined" id={item.id} data-title={item.title} data-type={item.type} onClick={handleDelete}>
+                                            <span>Remove</span>
+                                            <span class="icon is-small">
+                                                <i class="fas fa-times"></i>
+                                            </span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
+                        })
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" form="mod" class="button is-info" value="Create Module" />
         </div>
     )
 }
