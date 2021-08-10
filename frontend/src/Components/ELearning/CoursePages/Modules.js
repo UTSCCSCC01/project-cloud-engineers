@@ -18,14 +18,13 @@ import Typography from '@material-ui/core/Typography';
 import { Snackbar } from "@material-ui/core";
 import MuiAlert from '@material-ui/lab/Alert';
 
+import "../../../Styles/Modules.css"
+
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
-  },
-  media: {
-    height: 140,
-  },
+  }
 });
 
 function Alert(props) {
@@ -112,25 +111,25 @@ function Modules(props) {
   if (error) return <p>Error :(</p>;
 
   return (
-      <div>
+      <div className="top-level">
+        <div>
           <List component="nav" aria-label="mailbox folders">
               {
                   generateMarkup(values)
               }
               <br></br>
           </List>
-
-          <br></br>
-          <br></br>
-          <br></br>
+        </div>
+        <div className={classes.media}>
+          <span>
           {
               curDisplay.length!=0 && (<MediaCard curDisplay={curDisplay}/>)
           }
+          </span>
 
 
           <Link className="App-link" to={'/home/e-learning/'+courseId}>Back to Course Homepage</Link>
-
-
+        </div>
       </div>
     )
 }
@@ -284,12 +283,6 @@ function MediaCard({curDisplay}) {
               <Typography gutterBottom variant="h5" component="h2">
                 {newCard.title}
               </Typography>
-              
-              {loading ? (
-                <Typography variant="body2" color="textSecondary" component="p">
-                loading...
-                </Typography>
-                ) : displaySubmission()}
             
               <Typography variant="body2" color="textSecondary" component="p">
                   {newCard.description}
@@ -298,10 +291,17 @@ function MediaCard({curDisplay}) {
               <Typography color="textSecondary">
               Due: {dueDate}
               </Typography>
+
+              {loading ? (
+                <Typography variant="body2" color="textSecondary" component="p">
+                loading...
+                </Typography>
+                ) : displaySubmission()}
+                
             </CardContent>
           <CardActions>
             <Button size="small" color="primary" value={newCard.files} onClick={() => {handleDownloads(newCard.files)}} >
-              Download
+              Download Handout
             </Button>
             <input 
               ref={fileRef}
