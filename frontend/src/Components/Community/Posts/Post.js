@@ -14,6 +14,7 @@ function Post({content, username, role, timestamp, media, postId, deleteCallBack
     const db = firebase.firestore();
     let user = JSON.parse(localStorage.user);
 
+
     // Used to render comments when user clicks the commnent icon.
     const [commentView, setcommentView] = useState(false);
     

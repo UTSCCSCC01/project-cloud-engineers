@@ -273,7 +273,6 @@ function MediaCard({curDisplay}) {
   // Renders assignment card
   const renderAssignment = () => {
     let date = new Date(newCard.duedate.seconds * 1000);
-
     let dueDate = ("Date: "+date.getDate()+
       "/"+(date.getMonth()+1)+
       "/"+date.getFullYear());
