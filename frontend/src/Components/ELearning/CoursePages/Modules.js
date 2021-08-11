@@ -339,6 +339,9 @@ function MediaCard({curDisplay}) {
                 <Typography variant="body2" color="textSecondary" component="p">
                     {newCard.content}
                 </Typography>
+                <Button size="small" color="primary" value={newCard.files} onClick={() => {handleDownloads(newCard.files)}} >
+              Download Handout
+                </Button>
                 <br></br>
               </CardContent>
             </CardActionArea>
