@@ -26,7 +26,7 @@ function App() {
         <Route exact path='/'>
           <div style={{
             backgroundImage: `url("https://ds6br8f5qp1u2.cloudfront.net/blog/wp-content/uploads/2017/04/web-design-background.png?x31155")`
-            ,'background-repeat': 'no-repeat'
+            ,'background-repeat': 'repeat-x', 'width':"100%",  position: "fixed"
          }} >
             <div class="hero-head">
               <nav class="navbar">
