@@ -29,9 +29,6 @@ function Course(props) {
     if (error) return <p>Error :(</p>;
 
     return (
-
-
-
         <div className="container">
             <div className="columns">
                 <div className="column is-2 has-text-left">
@@ -60,16 +57,7 @@ function Course(props) {
                 <Switch>
                     <Route exact path={path}>
                         <div className="column is-10 has-text-centered">
-                            {user.role === 'instructor' ?
-                                <div>
-                                    Home page view for instrcutor
-                                    <Link to={`${courseId}/create-assignment`}>Create New Assignment</Link>
-                                    <br />
-                                    <Link to={`${courseId}/create-lesson`}>Create New Lesson</Link>
-                                    <br />
-                                    <Link to={`${courseId}/create-module`}>Create Module</Link>
-                                </div> : <div>home page view for student</div>
-                            }
+                            <p>Welcome to {values[0].title}</p>
                         </div>
                     </Route>
                     <Route path={`${path}/modules`}>

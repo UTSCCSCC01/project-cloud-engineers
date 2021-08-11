@@ -118,13 +118,13 @@ function Modules(props) {
               }
               <br></br>
           </List>
+
           {
               curDisplay.length!=0 && (<MediaCard curDisplay={curDisplay}/>)
           }
 
-
           <Link className="App-link" to={'/home/e-learning/'+courseId}>Back to Course Homepage</Link>
-     
+
       </div>
     )
 }

@@ -51,9 +51,7 @@ function Home() {
                 <></>
             }
           </div>
-          <Link to={`${path}/user-preferences`}>Update Profile</Link>
-          <br></br>
-          <a onClick={() => auth.signOut(() => history.push("/"))}><strong>Log Out</strong></a>
+          
         </div>
       </Route>
 

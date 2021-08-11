@@ -16,7 +16,7 @@ function Submissions(props) {
   let [userValues, setUserValues] = useState([]);
 
   useEffect(() => {
-    if (values) {
+    if (values && values.length !== 0) {
       let user_list = values.map(e => e.userId);
       db.collection('users').where('uid', 'in', user_list)
         .get()
