@@ -45,7 +45,7 @@ function GradesSummary(props) {
                 average: a.grade/a.total,
                 median: parseInt(Object.entries(b).find(([key, val]) => val === c)[0]),
                 total: values.length,
-                graded_total: values.filter(e => e.grade !== null).length
+                graded_total: values.filter(e => e.grade).length
             };
             setStats(res);
         }
