@@ -111,25 +111,20 @@ function Modules(props) {
   if (error) return <p>Error :(</p>;
 
   return (
-      <div className="top-level">
-        <div>
+      <div>
           <List component="nav" aria-label="mailbox folders">
               {
                   generateMarkup(values)
               }
               <br></br>
           </List>
-        </div>
-        <div className={classes.media}>
-          <span>
           {
               curDisplay.length!=0 && (<MediaCard curDisplay={curDisplay}/>)
           }
-          </span>
 
 
           <Link className="App-link" to={'/home/e-learning/'+courseId}>Back to Course Homepage</Link>
-        </div>
+     
       </div>
     )
 }
@@ -289,7 +284,7 @@ function MediaCard({curDisplay}) {
               </Typography>
               <br></br>
               <Typography color="textSecondary">
-              Due: {dueDate}
+              Due {dueDate}
               </Typography>
 
               {loading ? (
