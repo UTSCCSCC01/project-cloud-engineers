@@ -94,10 +94,7 @@ function People(props) {
             }}>
             {values && generateMarkup(values[0].students)}
             </List>
-            <br></br>
-            <br></br>
-            <br></br>
-            <Link className="App-link" to={'/home/e-learning/'+courseId}>Back to Course Homepage</Link>
+            
 
         </div>
         
